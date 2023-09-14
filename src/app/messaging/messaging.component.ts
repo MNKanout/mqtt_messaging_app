@@ -20,9 +20,14 @@ export class MessagingComponent implements OnInit {
     const routeParms = this.route.snapshot.paramMap;
     this.username = routeParms.get(usernameRoutingVariable);
   }
-  
+
   connect(){
     this.messagingService.connect()
+  }
+
+  publish(message: string){
+    console.log(message)
+    this.messagingService.publish(message)
   }
 
 

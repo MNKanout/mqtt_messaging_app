@@ -17,8 +17,8 @@
         </select>
     </div>
     <div>
-        <input placeholder="messsage" type="text">
-        <button type="button">Send</button>
+        <input #message placeholder="messsage" type="text">
+        <button (click)="publish(message.value)" type="button">Send</button>
     </div>
 </div>
 <br>
