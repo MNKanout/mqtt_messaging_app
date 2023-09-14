@@ -22,17 +22,16 @@ export class MessagingComponent implements OnInit {
   }
 
   connect(){
-    this.messagingService.connect()
+    this.messagingService.connect();
     this.subscribe();
   }
 
   publish(message: string){
-    console.log(message)
-    this.messagingService.publish(message)
+    this.messagingService.publish(message);
   }
   subscribe(){
     const observable$ = this.messagingService.subscribe();
-    observable$.subscribe((msg)=>{console.log('Subscriber is called', msg.payload.toString())});
+    observable$.subscribe((msg)=>{console.log('Subscriber recieved:', msg.payload.toString())});
     // Unsubscribe needed to prevent memory leak
   }
 

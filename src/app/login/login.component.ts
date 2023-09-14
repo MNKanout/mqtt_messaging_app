@@ -4,12 +4,13 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  constructor(private router: Router){}
+  constructor(private router: Router) {
+  }
 
   onClick(username:string){
-    this.router.navigate(['/messaging',username])
+    this.router.navigate(['/messaging', username]);
   }
 }
