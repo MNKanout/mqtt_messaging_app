@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { usernameRoutingVariable } from '../routes';
 
 @Component({
   selector: 'app-messaging',
@@ -14,8 +15,8 @@ export class MessagingComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const routeParm = this.route.snapshot.paramMap;
-    this.username = routeParm.get('username');
+    const routeParms = this.route.snapshot.paramMap;
+    this.username = routeParms.get(usernameRoutingVariable);
   }
 
 

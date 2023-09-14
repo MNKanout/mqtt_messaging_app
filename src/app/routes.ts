@@ -4,11 +4,10 @@ import { HomeComponent } from './home/home.component';
 import { LoginComponent } from './login/login.component';
 import { MessagingComponent } from './messaging/messaging.component';
 
+export const usernameRoutingVariable = 'username';
 
-const routes: Route[] = [
+export const routes: Route[] = [
     {path:'', component: HomeComponent},
     {path:'login', component: LoginComponent},
-    {path:'messaging/:username', component: MessagingComponent},
+    {path:'messaging/:'+ usernameRoutingVariable, component: MessagingComponent},
   ]
-  
-export {routes};
