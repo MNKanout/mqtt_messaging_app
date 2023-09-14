@@ -11,12 +11,20 @@ export class MessagingService {
   constructor(private mqttService: MqttService) {
 
    }
+
    connect(){
     this.mqttService.connect()
    }
+
    publish(message: string){
     console.log(message)
     const observable = this.mqttService.publish(this.topic, message)
     observable.subscribe(()=>{console.log('Subscribe is called in observable')})
+    // Unsubscribe needed to prevent memory leak.
+   }
+
+   subscribe(){
+    const observable$ = this.mqttService.observe(this.topic);
+    return observable$; 
    }
 }
