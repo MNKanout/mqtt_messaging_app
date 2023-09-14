@@ -19,7 +19,7 @@ const connection: IMqttServiceOptions = {
   connectTimeout: 4000, // Timeout period
   reconnectPeriod: 4000, // Reconnect period
   // Authentication information
-  // clientId: 'mqttx_597046f4',
+  clientId: 'madQTT',
   username: 'testAdmin',
   password: 'Password1234',
   protocol:'wss',
