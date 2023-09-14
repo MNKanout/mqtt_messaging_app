@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
@@ -8,7 +8,7 @@ import { MessagingService } from '../messaging.service';
   templateUrl: './messaging.component.html',
   styleUrls: ['./messaging.component.css']
 })
-export class MessagingComponent implements OnInit {
+export class MessagingComponent implements OnInit, OnDestroy {
 
   username: string | null = '';
 
@@ -21,6 +21,10 @@ export class MessagingComponent implements OnInit {
     this.username = routeParms.get(usernameRoutingVariable);
   }
 
+  ngOnDestroy(): void {
+    this.messagingService.unsubscribe();
+  }
+
   connect(){
     this.messagingService.connect();
     this.subscribe();
@@ -29,6 +33,7 @@ export class MessagingComponent implements OnInit {
   publish(message: string){
     this.messagingService.publish(message);
   }
+
   subscribe(){
     const observable$ = this.messagingService.subscribe();
     observable$.subscribe((msg)=>{console.log('Subscriber recieved:', msg.payload.toString())});

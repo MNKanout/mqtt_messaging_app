@@ -26,4 +26,8 @@ export class MessagingService {
     const observable$ = this.mqttService.observe(this.topic);
     return observable$;
    }
+
+   unsubscribe(){
+    this.mqttService.disconnect()
+   }
 }
