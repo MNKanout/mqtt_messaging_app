@@ -8,7 +8,7 @@ import { MessagingComponent } from './messaging/messaging.component';
 const routes: Route[] = [
     {path:'', component: HomeComponent},
     {path:'login', component: LoginComponent},
-    {path:'messaging', component: MessagingComponent},
+    {path:'messaging/:username', component: MessagingComponent},
   ]
   
 export {routes};

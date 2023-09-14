@@ -1,4 +1,5 @@
 <div>
-    <input type="text" placeholder="Enter your name">
-    <button [routerLink]="['/messaging']" type="button">Login</button>
+    <input #username type="text" placeholder="Enter your name">
+    <button type="submit"
+    (click)="onClick(username.value)">Login</button>
 </div>
