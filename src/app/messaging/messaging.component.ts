@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
+import { Message } from '../message.interface';
 
 @Component({
   selector: 'app-messaging',
@@ -11,6 +12,7 @@ import { MessagingService } from '../messaging.service';
 export class MessagingComponent implements OnInit, OnDestroy {
 
   username: string | null = '';
+  messages: Message[] = [];
 
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,){
@@ -36,7 +38,14 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   subscribe(){
     const observable$ = this.messagingService.subscribe();
-    observable$.subscribe((msg)=>{console.log('Subscriber recieved:', msg.payload.toString())});
+    observable$.subscribe((msg)=>{
+      this.messages.push(
+        {'text': msg.payload.toString(),
+        'topic': msg.topic,
+      })
+      // this.messages.push(msg.payload.toString())
+      // console.log('Subscriber recieved:', payload)
+    });
     // Unsubscribe needed to prevent memory leak
   }
 

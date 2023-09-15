@@ -5,8 +5,12 @@
 </div>
 <div>
     <div>
-        <textarea placeholder="Messages" name="" id="" 
-        cols="30" rows="10" disabled></textarea>
+        <ul>
+            <li *ngFor="let message of messages">
+                <p>{{'Topic: ' + message.topic}}</p>
+                <p>{{'Message: ' + message.text}}</p>
+            </li>
+        </ul>
     </div>
     <div>
         <p>Select category</p>
