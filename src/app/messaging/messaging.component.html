@@ -4,7 +4,24 @@
     <button (click)="connect()">Connect</button>
 </div>
 <div>
+    <h3>Topic</h3>
     <div>
+        <h5>Add new topic</h5>
+        <input [(ngModel)]="topic" placeholder="Category name" type="text">
+        <button (click)="addNewTopic()" type="button">Add category</button>
+    </div>
+    <div>
+        <h5>Listen to</h5>
+        <select>
+            <option value="topic" *ngFor='let item of topics'>
+                {{item}}
+            </option>
+        </select>
+    </div>
+</div>
+<div>
+    <div>
+        <h3>Message</h3>
         <ul>
             <li *ngFor="let message of messages">
                 <p>{{'Topic: ' + message.topic}}</p>
@@ -13,21 +30,7 @@
         </ul>
     </div>
     <div>
-        <p>Select category</p>
-        <select name="" id="">
-            <option value="c1">Category1</option>
-            <option value="c1">Category2</option>
-            <option value="c1">Category3</option>
-        </select>
-    </div>
-    <div>
         <input #message placeholder="messsage" type="text">
         <button (click)="publish(message.value)" type="button">Send</button>
     </div>
-</div>
-<br>
-<div>
-    <h3>Add new category</h3>
-    <input placeholder="Category name" type="text">
-    <button type="button">Add category</button>
 </div>

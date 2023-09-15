@@ -14,6 +14,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   username: string | null = '';
   messages: Message[] = [];
   topic: string = 'channel_1';
+  topics: string[] = [];
 
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,){
@@ -31,6 +32,12 @@ export class MessagingComponent implements OnInit, OnDestroy {
   connect(){
     this.messagingService.connect();
     this.subscribe();
+  }
+
+  addNewTopic(){
+    this.topics.push(this.topic);
+    this.topic = '';
+    console.log(this.topics)
   }
 
   publish(message: string){
