@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
+import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
@@ -38,6 +39,7 @@ const connection: IMqttServiceOptions = {
     AppRoutingModule,
     RouterModule.forRoot(routes),
     MqttModule.forRoot(connection),
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
