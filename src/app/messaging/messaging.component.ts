@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
 import { Message } from '../message.interface';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-messaging',
@@ -15,6 +16,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   topic: string = 'channel_1';
   topics: string[] = [];
+  subscriptions: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,){
@@ -26,12 +28,19 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.messagingService.disconnect();
+    this.disconnect();
   }
 
   connect(){
     this.messagingService.connect();
-    this.subscribe();
+    this.subscribeToAllTopics();
+  }
+
+  disconnect(){
+    for (let sub of this.subscriptions){
+      sub.unsubscribe();
+    }
+    this.messagingService.disconnect();
   }
 
   addNewTopic(){
@@ -45,20 +54,21 @@ export class MessagingComponent implements OnInit, OnDestroy {
       topic: this.topic,
       text: message,
     }
-    this.messagingService.publish(msg);
+    function myFunction(){console.log('Publisher sent:', message)};
+    const observable$ = this.messagingService.publish(msg);
+    const subscription = observable$.subscribe(myFunction);
+    this.subscriptions.push(subscription);
   }
 
-  subscribe(){
+  subscribeToAllTopics(){
     const observable$ = this.messagingService.subscribe(this.topic);
-    observable$.subscribe((msg)=>{
+    const subscription =  observable$.subscribe((msg)=>{
       this.messages.push(
         {'text': msg.payload.toString(),
         'topic': msg.topic,
-      })
-      // this.messages.push(msg.payload.toString())
-      // console.log('Subscriber recieved:', payload)
+      });
     });
-    // Unsubscribe needed to prevent memory leak
+    this.subscriptions.push(subscription);
   }
 
 
