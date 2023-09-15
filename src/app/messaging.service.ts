@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import {MqttService } from 'ngx-mqtt';
+import { Message } from './message.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
-
-  topic: string = 'channel_1';
 
   constructor(private mqttService: MqttService) {
 
@@ -16,14 +15,14 @@ export class MessagingService {
     this.mqttService.connect();
    }
 
-   publish(message: string){
-    const observable = this.mqttService.publish(this.topic, message);
+   publish(message: Message){
+    const observable = this.mqttService.publish(message.topic, message.text);
     observable.subscribe(()=>{console.log('Publisher sent:', message)});
     // Unsubscribe needed to prevent memory leak.
    }
 
-   subscribe(){
-    const observable$ = this.mqttService.observe(this.topic);
+   subscribe(topic: string){
+    const observable$ = this.mqttService.observe(topic);
     return observable$;
    }
 

@@ -13,6 +13,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   username: string | null = '';
   messages: Message[] = [];
+  topic: string = 'channel_1';
 
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,){
@@ -33,11 +34,15 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   publish(message: string){
-    this.messagingService.publish(message);
+    const msg: Message = {
+      topic: this.topic,
+      text: message,
+    }
+    this.messagingService.publish(msg);
   }
 
   subscribe(){
-    const observable$ = this.messagingService.subscribe();
+    const observable$ = this.messagingService.subscribe(this.topic);
     observable$.subscribe((msg)=>{
       this.messages.push(
         {'text': msg.payload.toString(),
