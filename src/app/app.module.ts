@@ -12,15 +12,15 @@ import { routes } from './routes';
 import { MessagingComponent } from './messaging/messaging.component';
 
 const connection: IMqttServiceOptions = {
-  hostname: 'xe5f1eee.ala.us-east-1.emqxsl.com',
-  port: 8084 ,
+  hostname: 'b3045d96ad1a4d06abf8b4ceb2245468.s1.eu.hivemq.cloud',
+  port: 8884 ,
   path: '/mqtt',
   clean: true, // Retain session
   connectTimeout: 4000, // Timeout period
   reconnectPeriod: 4000, // Reconnect period
   // Authentication information
-  clientId: 'madQTT',
-  username: 'testAdmin',
+  // clientId: 'madQTT',
+  username: 'admin',
   password: 'Password1234',
   protocol:'wss',
  }
