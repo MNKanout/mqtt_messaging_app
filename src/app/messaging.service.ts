@@ -7,8 +7,6 @@ import { tap, map, distinctUntilChanged } from 'rxjs';
 })
 export class MessagingService {
 
-  topic: string = 'channel_1';
-
   constructor(private mqttService: MqttService) {
 
    }
@@ -28,14 +26,14 @@ export class MessagingService {
     return statusObservable$;
   }
 
-   publish(message: string){
-    const observable = this.mqttService.publish(this.topic, message);
+   publish(topic: string, message: string){
+    const observable = this.mqttService.publish(topic, message);
     observable.subscribe(()=>{console.log('Publisher sent:', message)});
     // Unsubscribe needed to prevent memory leak.
    }
 
-   subscribe(){
-    const observable$ = this.mqttService.observe(this.topic);
+   subscribe(topic: string){
+    const observable$ = this.mqttService.observe(topic);
     return observable$;
    }
 

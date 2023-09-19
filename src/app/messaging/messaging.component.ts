@@ -16,6 +16,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   subscriptions: Subscription[] = [];
   connectedStatus: string = '';
+  topic: string = 'channel_1';
 
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,){
@@ -54,11 +55,11 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   publish(message: string){
-    this.messagingService.publish(message);
+    this.messagingService.publish(this.topic, message);
   }
 
   subscribe(){
-    const observable$ = this.messagingService.subscribe();
+    const observable$ = this.messagingService.subscribe(this.topic);
     observable$.subscribe((msg)=>{
       this.messages.push(
         {'text': msg.payload.toString(),
