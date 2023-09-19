@@ -16,7 +16,9 @@ export class MessagingComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   subscriptions: Subscription[] = [];
   connectedStatus: string = '';
+  subscribeButton: string = 'Subscribe';
   topic: string = 'channel_1';
+  
 
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,){
@@ -45,13 +47,10 @@ export class MessagingComponent implements OnInit, OnDestroy {
     this.messagingService.disconnect();
   }
 
-  onClick(){
-    this.connect();
-  }
-
-  connect(){
-    // this.messagingService.connect();
+  onSubscribe(){
     this.subscribe();
+    console.log('Subscribed to:' + this.topic)
+    console.log(this.subscriptions);
   }
 
   publish(message: string){
@@ -60,15 +59,13 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   subscribe(){
     const observable$ = this.messagingService.subscribe(this.topic);
-    observable$.subscribe((msg)=>{
+    const subscription = observable$.subscribe((msg)=>{
       this.messages.push(
         {'text': msg.payload.toString(),
         'topic': msg.topic,
       })
-      // this.messages.push(msg.payload.toString())
-      // console.log('Subscriber recieved:', payload)
     });
-    // Unsubscribe needed to prevent memory leak
+    this.subscriptions.push(subscription);
   }
 
 
