@@ -24,7 +24,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.messagingService.unsubscribe();
+    this.messagingService.disconnect();
   }
 
   connect(){
