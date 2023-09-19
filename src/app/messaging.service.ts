@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import {MqttService } from 'ngx-mqtt';
+import {MqttService, MqttConnectionState } from 'ngx-mqtt';
+import { tap, map, distinctUntilChanged } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +16,17 @@ export class MessagingService {
    connect(){
     this.mqttService.connect();
    }
+
+   getConnectedStatus() {
+    const statusObservable$ = this.mqttService.state
+      .pipe(
+        map(state => {
+          return state === MqttConnectionState.CONNECTED
+        }),
+        distinctUntilChanged(),
+      );
+    return statusObservable$;
+  }
 
    publish(message: string){
     const observable = this.mqttService.publish(this.topic, message);
