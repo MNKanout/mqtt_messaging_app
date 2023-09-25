@@ -14,8 +14,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   username: string | null = '';
   messages: Message[] = [];
-  topic: string = 'channel_1';
-  topics: string[] = [];
+  currentTopic: string = 'channel_1';
+  topics: string[] = ["cha1","cha2","cha"];
   subscriptions: Subscription[] = [];
 
   constructor(private route: ActivatedRoute,
@@ -44,14 +44,12 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   addNewTopic(){
-    this.topics.push(this.topic);
-    this.topic = '';
     console.log(this.topics)
   }
 
   publish(message: string){
     const msg: Message = {
-      topic: this.topic,
+      topic: this.currentTopic,
       text: message,
     }
     function myFunction(){console.log('Publisher sent:', message)};
@@ -61,7 +59,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   subscribeToAllTopics(){
-    const observable$ = this.messagingService.subscribe(this.topic);
+    const observable$ = this.messagingService.subscribe(this.currentTopic);
     const subscription =  observable$.subscribe((msg)=>{
       this.messages.push(
         {'text': msg.payload.toString(),

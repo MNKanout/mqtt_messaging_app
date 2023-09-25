@@ -12,8 +12,8 @@
     </div>
     <div>
         <h5>Listen to</h5>
-        <select>
-            <option value="topic" *ngFor='let topic of topics'>
+        <select [(ngModel)]="currentTopic">
+            <option value={{topic}} *ngFor='let topic of topics'>
                 {{topic}}
             </option>
         </select>
