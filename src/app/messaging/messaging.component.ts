@@ -15,6 +15,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   username: string | null = '';
   messages: Message[] = [];
   currentTopic: string = 'channel_1';
+  newTopic: string = '';
   topics: string[] = ["cha1","cha2","cha"];
   subscriptions: Subscription[] = [];
 
@@ -43,7 +44,9 @@ export class MessagingComponent implements OnInit, OnDestroy {
     this.messagingService.disconnect();
   }
 
-  addNewTopic(){
+  onNewTopic(){
+    this.topics.push(this.newTopic);
+    this.newTopic = '';
     console.log(this.topics)
   }
 
