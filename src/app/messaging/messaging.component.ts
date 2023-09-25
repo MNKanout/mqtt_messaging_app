@@ -18,21 +18,38 @@ export class MessagingComponent implements OnInit, OnDestroy {
   newTopic: string = '';
   topics: string[] = ["cha1","cha2","cha"];
   subscriptions: Subscription[] = [];
+  connectedStatus: string = '';
+  subscribeButton: string = 'Subscribe';
+  
 
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,){
   }
 
   ngOnInit(): void {
+    // Getting data from active route
     const routeParms = this.route.snapshot.paramMap;
     this.username = routeParms.get(usernameRoutingVariable);
+    // 
+    const statusObservable$ = this.messagingService.getConnectedStatus();
+    const subscription = statusObservable$.subscribe((isConnected)=>{
+      if (isConnected){
+        this.connectedStatus = 'Connected';
+      } else {
+        this.connectedStatus = 'Disconnected';
+      }
+    });
+    this.subscriptions.push(subscription);
   }
 
   ngOnDestroy(): void {
+    for(let sub of this.subscriptions){
+      sub.unsubscribe();
+    }
     this.disconnect();
   }
 
-  connect(){
+  onSubscribe(){
     this.messagingService.connect();
     this.subscribeToAllTopics();
   }
