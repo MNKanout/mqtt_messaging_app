@@ -1,8 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HomeComponent } from './home.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
+import { Location } from '@angular/common';
+
+// Local
+import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -12,6 +14,7 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
       imports:[RouterTestingModule],
+      providers:[Location],
     });
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
@@ -38,5 +41,10 @@ describe('HomeComponent', () => {
     const getStartedButton: HTMLButtonElement = fixture.debugElement.
     query(By.css('button')).nativeElement;
     expect(getStartedButton.innerHTML).toBe('GET STARTED');
+  });
+
+  it('Should be in the root route',()=>{
+    const location: Location = TestBed.inject(Location);
+    expect(location.path()).toBe('');
   });
 });
