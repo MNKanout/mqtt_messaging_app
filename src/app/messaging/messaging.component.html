@@ -1,16 +1,18 @@
-  <div class="container">
-   <h3>Welcome {{username}}</h3>
-    <h3>{{connectedStatus}}</h3>
-    <mat-divider></mat-divider>
+  <div fxLayout="column" fxLayoutAlign="space-around">
+    <div>
+        <h3>Welcome {{username}}</h3>
+        <h3>{{connectedStatus}}</h3>
+        <mat-divider></mat-divider>
+    </div>
     <div>
         <h3>Topic</h3>
-        <div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
                 <input matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
             </mat-form-field>
             <button mat-raised-button color="primary" (click)="onNewTopic()" type="button">Add topic</button>
         </div>
-        <div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
                 <mat-label>Select topic</mat-label>
                 <mat-select [(value)]="currentTopic">
@@ -21,15 +23,16 @@
             <button mat-raised-button color="primary" (click)="onSubscribe()">Subscribe</button>
         </div>
     </div>
-<mat-divider></mat-divider>
+    <mat-divider></mat-divider>
     <div>
         <h3>Message</h3>
-        <div>
+        <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
                 <input matInput #message placeholder="messsage" type="text">
             </mat-form-field>
             <button mat-raised-button color="primary" (click)="publish(message.value)" type="button">Send</button>
         </div>
+        <mat-divider></mat-divider>
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
             <mat-tab label={{message.topic}} *ngFor="let message of messages">
                 <p>{{'Topic: ' + message.topic}}</p>

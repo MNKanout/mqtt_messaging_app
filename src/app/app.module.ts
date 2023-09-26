@@ -20,6 +20,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 const connection: IMqttServiceOptions = {
@@ -57,6 +58,7 @@ const connection: IMqttServiceOptions = {
     MatInputModule,
     MatDividerModule,
     MatButtonModule,
+    FlexLayoutModule,
     
 
   ],
