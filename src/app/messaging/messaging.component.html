@@ -7,13 +7,15 @@
             <input [(ngModel)]="newTopic" placeholder="New topic name" type="text">
             <button (click)="onNewTopic()" type="button">Add topic</button>
         </div>
-        <select [(ngModel)]="currentTopic">
-            <option disabled>Select topic</option>
-            <option value={{topic}} *ngFor='let topic of topics'>
-                {{topic}}
-            </option>
-        </select>
-        <button (click)="onSubscribe()">Subscribe</button>
+    <div>
+    <mat-form-field>
+        <mat-label>Select topic</mat-label>
+        <mat-select [(value)]="currentTopic">
+          <mat-option value={{topic}} *ngFor='let topic of topics'>
+            {{topic}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button (click)="onSubscribe()">Subscribe</button>
     </div>
 </div>
 
@@ -23,7 +25,7 @@
         <input #message placeholder="messsage" type="text">
         <button (click)="publish(message.value)" type="button">Send</button>
     </div>
-    
+
     <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
         <mat-tab label={{message.topic}} *ngFor="let message of messages">
             <p>{{'Topic: ' + message.topic}}</p>

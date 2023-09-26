@@ -11,8 +11,13 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { routes } from './routes';
 import { MessagingComponent } from './messaging/messaging.component';
+
+// Styling
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
+
 
 const connection: IMqttServiceOptions = {
   hostname: 'b3045d96ad1a4d06abf8b4ceb2245468.s1.eu.hivemq.cloud',
@@ -44,6 +49,9 @@ const connection: IMqttServiceOptions = {
     FormsModule,
     BrowserAnimationsModule,
     MatTabsModule,
+    MatSelectModule,
+    MatFormFieldModule,
+
   ],
   providers: [],
   bootstrap: [AppComponent]
