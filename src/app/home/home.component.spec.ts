@@ -27,4 +27,10 @@ describe('HomeComponent', () => {
     query(By.css('h3')).nativeElement;
     expect(h3Elem.innerHTML).toBe('Welcome to MQTT messaging app');
   });
+
+  it('should contain p description tag ', () => {
+    const h3Elem: HTMLParagraphElement = fixture.debugElement.
+    query(By.css('p')).nativeElement;
+    expect(h3Elem.innerHTML).toBe('Click the button bellow to get started');
+  });
 });
