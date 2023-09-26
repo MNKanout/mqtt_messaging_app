@@ -23,12 +23,13 @@
         <input #message placeholder="messsage" type="text">
         <button (click)="publish(message.value)" type="button">Send</button>
     </div>
-
-    <ul>
-        <li *ngFor="let message of messages">
+    
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
+        <mat-tab label={{message.topic}} *ngFor="let message of messages">
             <p>{{'Topic: ' + message.topic}}</p>
             <p>{{'Message: ' + message.text}}</p>
-        </li>
-    </ul>
+        </mat-tab>
+      </mat-tab-group>
+      
 
 </div>

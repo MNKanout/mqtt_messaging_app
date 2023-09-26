@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { routes } from './routes';
 import { MessagingComponent } from './messaging/messaging.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatTabsModule} from '@angular/material/tabs';
 
 const connection: IMqttServiceOptions = {
   hostname: 'b3045d96ad1a4d06abf8b4ceb2245468.s1.eu.hivemq.cloud',
@@ -42,6 +43,7 @@ const connection: IMqttServiceOptions = {
     MqttModule.forRoot(connection),
     FormsModule,
     BrowserAnimationsModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

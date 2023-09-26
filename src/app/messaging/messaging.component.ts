@@ -19,7 +19,6 @@ export class MessagingComponent implements OnInit, OnDestroy {
   topics: string[] = [];
   subscriptions: Subscription[] = [];
   connectedStatus: string = '';
-  subscribeButton: string = 'Subscribe';
   
 
   constructor(private route: ActivatedRoute,
