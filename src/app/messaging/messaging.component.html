@@ -1,38 +1,40 @@
-<h3>Welcome {{username}}</h3>
-<h3>{{connectedStatus}}</h3>
-<div>
-    <h3>Topic</h3>
+  <div>
+   <h3>Welcome {{username}}</h3>
+    <h3>{{connectedStatus}}</h3>
+    <mat-divider></mat-divider>
     <div>
-        <mat-form-field>
-            <input matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
-            <button (click)="onNewTopic()" type="button">Add topic</button>
-        </mat-form-field>
+        <h3>Topic</h3>
+        <div>
+            <mat-form-field>
+                <input matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="onNewTopic()" type="button">Add topic</button>
+        </div>
+        <div>
+            <mat-form-field>
+                <mat-label>Select topic</mat-label>
+                <mat-select [(value)]="currentTopic">
+                <mat-option value={{topic}} *ngFor='let topic of topics'>
+                    {{topic}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="onSubscribe()">Subscribe</button>
+        </div>
     </div>
+<mat-divider></mat-divider>
     <div>
-        <mat-form-field>
-            <mat-label>Select topic</mat-label>
-            <mat-select [(value)]="currentTopic">
-            <mat-option value={{topic}} *ngFor='let topic of topics'>
-                {{topic}}</mat-option>
-            </mat-select>
-        </mat-form-field>
-        <button (click)="onSubscribe()">Subscribe</button>
+        <h3>Message</h3>
+        <div>
+            <mat-form-field>
+                <input matInput #message placeholder="messsage" type="text">
+            </mat-form-field>
+            <button mat-raised-button color="primary" (click)="publish(message.value)" type="button">Send</button>
+        </div>
+        <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
+            <mat-tab label={{message.topic}} *ngFor="let message of messages">
+                <p>{{'Topic: ' + message.topic}}</p>
+                <p>{{'Message: ' + message.text}}</p>
+            </mat-tab>
+        </mat-tab-group>
     </div>
-</div>
-
-<div>
-    <h3>Message</h3>
-    <div>
-        <mat-form-field>
-            <input matInput #message placeholder="messsage" type="text">
-            <button (click)="publish(message.value)" type="button">Send</button>
-        </mat-form-field>
-    </div>
-
-    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
-        <mat-tab label={{message.topic}} *ngFor="let message of messages">
-            <p>{{'Topic: ' + message.topic}}</p>
-            <p>{{'Message: ' + message.text}}</p>
-        </mat-tab>
-    </mat-tab-group>
-</div>
+</div> 
