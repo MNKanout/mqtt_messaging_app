@@ -12,6 +12,17 @@ import { HomeComponent } from './home/home.component';
 import { routes } from './routes';
 import { MessagingComponent } from './messaging/messaging.component';
 
+// Styling
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatSelectModule} from '@angular/material/select';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatInputModule} from '@angular/material/input';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+
 const connection: IMqttServiceOptions = {
   hostname: 'b3045d96ad1a4d06abf8b4ceb2245468.s1.eu.hivemq.cloud',
   port: 8884 ,
@@ -40,6 +51,16 @@ const connection: IMqttServiceOptions = {
     RouterModule.forRoot(routes),
     MqttModule.forRoot(connection),
     FormsModule,
+    BrowserAnimationsModule,
+    MatTabsModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDividerModule,
+    MatButtonModule,
+    FlexLayoutModule,
+    
+
   ],
   providers: [],
   bootstrap: [AppComponent]
