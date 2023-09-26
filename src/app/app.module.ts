@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
-import { MqttModule, IMqttServiceOptions } from 'ngx-mqtt';
+import { MqttModule} from 'ngx-mqtt';
 import { FormsModule } from '@angular/forms';
 
 import { AppComponent } from './app.component';
@@ -11,6 +11,7 @@ import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { routes } from './routes';
 import { MessagingComponent } from './messaging/messaging.component';
+import { connection } from './mqtt.config';
 
 // Styling
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -21,22 +22,6 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-
-const connection: IMqttServiceOptions = {
-  hostname: 'b3045d96ad1a4d06abf8b4ceb2245468.s1.eu.hivemq.cloud',
-  port: 8884 ,
-  path: '/mqtt',
-  clean: true, // Retain session
-  connectTimeout: 4000, // Timeout period
-  reconnectPeriod: 4000, // Reconnect period
-  // Authentication information
-  // clientId: 'madQTT',
-  username: 'admin',
-  password: 'Password1234',
-  protocol:'wss',
- }
-
 
 @NgModule({
   declarations: [
