@@ -33,4 +33,10 @@ describe('HomeComponent', () => {
     query(By.css('p')).nativeElement;
     expect(h3Elem.innerHTML).toBe('Click the button bellow to get started');
   });
+  
+  it('Should have a get started button',()=>{
+    const getStartedButton: HTMLButtonElement = fixture.debugElement.
+    query(By.css('button')).nativeElement;
+    expect(getStartedButton.innerHTML).toBe('GET STARTED');
+  });
 });
