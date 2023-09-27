@@ -1,7 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { Location } from '@angular/common';
+import {routes} from '../routes'
 
 // Local
 import { HomeComponent } from './home.component';
@@ -13,7 +14,7 @@ describe('HomeComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
-      imports:[RouterTestingModule],
+      imports:[RouterTestingModule.withRoutes(routes)],
       providers:[Location],
     });
     fixture = TestBed.createComponent(HomeComponent);
@@ -48,13 +49,11 @@ describe('HomeComponent', () => {
     expect(location.path()).toBe('');
   });
 
-  it('Should navigate to the login page when click get started',()=>{
-    const location = TestBed.inject(Location);
+  it('Should navigate to the login page when click get started',fakeAsync(()=>{
+    const location: Location = TestBed.inject(Location);
     const button = fixture.debugElement.query(By.css('button')).nativeElement;
     button.click();
-    fixture.detectChanges();
-    fixture.whenStable().then(()=>{
-      expect(location.path()).toBe('/login');
-    })
-  })
+    tick();
+    expect(location.path()).toBe('/login');
+  }));
 });
