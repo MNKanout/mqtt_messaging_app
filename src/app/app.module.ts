@@ -22,6 +22,7 @@ import {MatInputModule} from '@angular/material/input';
 import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     LoginComponent,
     HomeComponent,
     MessagingComponent,
+    NotFoundComponent,
   ],
   imports: [
     BrowserModule,
