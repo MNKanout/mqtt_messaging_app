@@ -40,5 +40,11 @@ describe('LoginComponent', () => {
     const inputField: HTMLInputElement = fixture.debugElement.
     query(By.css('input')).nativeElement;
     expect(inputField.name).toBe('username');
-  })
+  });
+
+  it('Should have login button', ()=>{
+    const button: HTMLButtonElement = fixture.debugElement.
+    query(By.css('button')).nativeElement;
+    expect(button.innerHTML).toBe('Login');
+  });
 });
