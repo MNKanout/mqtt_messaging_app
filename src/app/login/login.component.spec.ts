@@ -11,6 +11,7 @@ import { By } from '@angular/platform-browser';
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  let router: Router;
 
 
   beforeEach(() => {
@@ -20,6 +21,8 @@ describe('LoginComponent', () => {
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    router.initialNavigation();
     fixture.detectChanges();
   });
 
@@ -28,8 +31,6 @@ describe('LoginComponent', () => {
   });
 
   it ('should be at /login route', fakeAsync(()=>{
-    const router: Router = TestBed.inject(Router);
-    router.initialNavigation();
     router.navigate(['login']);
     tick();
     const currentRoute = router.routerState.snapshot.url;
@@ -47,4 +48,13 @@ describe('LoginComponent', () => {
     query(By.css('button')).nativeElement;
     expect(button.innerHTML).toBe('Login');
   });
+
+  it('Should navigate to messaging component when login button click',fakeAsync(()=>{
+    const button: HTMLButtonElement = fixture.debugElement.
+    query(By.css('button')).nativeElement;
+    button.click();
+    tick();
+    const currentRoute = router.routerState.snapshot.url;
+    expect(currentRoute).toBe('/messaging/');
+  }));
 });
