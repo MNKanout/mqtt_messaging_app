@@ -47,4 +47,14 @@ describe('HomeComponent', () => {
     const location: Location = TestBed.inject(Location);
     expect(location.path()).toBe('');
   });
+
+  it('Should navigate to the login page when click get started',()=>{
+    const location = TestBed.inject(Location);
+    const button = fixture.debugElement.query(By.css('button')).nativeElement;
+    button.click();
+    fixture.detectChanges();
+    fixture.whenStable().then(()=>{
+      expect(location.path()).toBe('/login');
+    })
+  })
 });
