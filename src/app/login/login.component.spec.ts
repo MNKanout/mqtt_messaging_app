@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 // Local
 import { LoginComponent } from './login.component';
 import {routes} from '../routes'
+import { By } from '@angular/platform-browser';
 
 
 describe('LoginComponent', () => {
@@ -34,4 +35,10 @@ describe('LoginComponent', () => {
     const currentRoute = router.routerState.snapshot.url;
     expect(currentRoute).toBe('/login');
   }));
+
+  it('Should have username input field',()=> {
+    const inputField: HTMLInputElement = fixture.debugElement.
+    query(By.css('input')).nativeElement;
+    expect(inputField.name).toBe('username');
+  })
 });
