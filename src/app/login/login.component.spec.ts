@@ -1,11 +1,16 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
+import { By } from '@angular/platform-browser';
+import {MatCardModule} from '@angular/material/card';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // Local
 import { LoginComponent } from './login.component';
-import {routes} from '../routes'
-import { By } from '@angular/platform-browser';
+import {routes} from '../routes';
+
 
 
 describe('LoginComponent', () => {
@@ -17,7 +22,13 @@ describe('LoginComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [LoginComponent],
-      imports:[RouterTestingModule.withRoutes(routes)],
+      imports:[
+        RouterTestingModule.withRoutes(routes),
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        BrowserAnimationsModule,
+      ],
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
