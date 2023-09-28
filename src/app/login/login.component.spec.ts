@@ -77,15 +77,13 @@ describe('LoginComponent', () => {
       expect(currentRoute).toBe('/messaging/dummyName');
     }));
 
-    it('Should navigate to page 404 when login button clicked without a supplied name',
-    fakeAsync(() => {
+    it('Should alert when login button clicked without a supplied name',() => {
+      spyOn(window,'alert');
       const button: HTMLButtonElement = fixture.debugElement.
         query(By.css('button')).nativeElement;
 
       button.click();
-      tick();
 
-      const currentRoute = router.routerState.snapshot.url;
-      expect(currentRoute).toBe('/404');
-    }));
+      expect(window.alert).toHaveBeenCalled();
+    });
 });

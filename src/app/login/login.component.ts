@@ -8,16 +8,16 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
 
-  username: string | undefined;
+  username: string = '';
 
   constructor(private router: Router) {
   }
 
   onClick(){
-    if (this.username) {
+    if (this.username.trim() !== '') {
     this.router.navigate(['/messaging', this.username]);
   } else {
-    this.router.navigate(['404']);
+    alert('Invalid username!')
   }
   }
 }
