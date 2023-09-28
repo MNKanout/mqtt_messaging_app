@@ -17,14 +17,14 @@
         <!-- Card content -->
         <mat-card-content>
             <mat-form-field>
-                <input matInput #username name="username" type="text" placeholder="Enter your name">
+                <input matInput [(ngModel)]="username" name="username" type="text" placeholder="Enter your name">
             </mat-form-field>
         </mat-card-content>
 
         <!-- Card actions -->
         <mat-card-actions>
             <button mat-raised-button color="primary" type="submit"
-            (click)="onClick(username.value)">Login</button>
+            (click)="onClick()">Login</button>
         </mat-card-actions>
 
     </mat-card>

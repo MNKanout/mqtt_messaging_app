@@ -7,10 +7,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+
+  username: string | undefined;
+
   constructor(private router: Router) {
   }
 
-  onClick(username:string){
-    this.router.navigate(['/messaging', username]);
+  onClick(){
+    if (this.username) {
+    this.router.navigate(['/messaging', this.username]);
+  } else {
+    this.router.navigate(['404']);
+  }
   }
 }
