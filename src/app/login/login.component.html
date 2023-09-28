@@ -1,5 +1,32 @@
-<div>
-    <input #username name="username" type="text" placeholder="Enter your name">
-    <button type="submit"
-    (click)="onClick(username.value)">Login</button>
+<div fxLayout="column" fxLayoutAlign="center center" [style.height.%]="90">
+    <!-- Card start -->
+    <mat-card fxLayout="column" fxLayoutAlign="center center" [style.padding.rem]="3">
+
+        <!-- Card header -->
+        <mat-card-header fxLayout="column" fxLayoutAlign="center center">
+            <mat-card-title-group align="center">
+                <mat-card-title>
+                    <h1>Login</h1>
+                </mat-card-title>
+                <mat-card-subtitle>
+                    <p>Enter your name to start using the messaging app!</p>
+                </mat-card-subtitle>
+            </mat-card-title-group>
+        </mat-card-header>
+
+        <!-- Card content -->
+        <mat-card-content>
+            <mat-form-field>
+                <input matInput #username name="username" type="text" placeholder="Enter your name">
+            </mat-form-field>
+        </mat-card-content>
+
+        <!-- Card actions -->
+        <mat-card-actions>
+            <button mat-raised-button color="primary" type="submit"
+            (click)="onClick(username.value)">Login</button>
+        </mat-card-actions>
+
+    </mat-card>
+    <!-- Card end -->
 </div>
