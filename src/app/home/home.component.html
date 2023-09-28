@@ -1,5 +1,13 @@
-<div>
-    <h3>Welcome to MQTT messaging app</h3>
-    <p>Click the button bellow to get started</p>
-    <button type="button" [routerLink]="['login']">GET STARTED</button>
+<div fxLayout="column" fxLayoutAlign="center center" [style.height.%]="90">
+    <mat-card fxLayout="column" fxLayoutAlign="center center" [style.padding.rem]="5">
+        <mat-card-header>
+            <h3>Welcome to MQTT messaging app</h3>
+        </mat-card-header>
+        <mat-card-content>
+            <p>Click the button bellow to get started</p>
+        </mat-card-content>
+        <mat-card-actions [style.paddingTop.rem]="3">
+            <button mat-raised-button color="primary" type="button" [routerLink]="['login']">GET STARTED</button>
+        </mat-card-actions>
+    </mat-card>
 </div>

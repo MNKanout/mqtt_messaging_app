@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { Location } from '@angular/common';
-import {routes} from '../routes'
+import {MatCardModule} from '@angular/material/card';
 
 // Local
+import {routes} from '../routes'
 import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
@@ -14,7 +15,8 @@ describe('HomeComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [HomeComponent],
-      imports:[RouterTestingModule.withRoutes(routes)],
+      imports:[RouterTestingModule.withRoutes(routes),
+        MatCardModule],
       providers:[Location],
     });
     fixture = TestBed.createComponent(HomeComponent);
