@@ -58,7 +58,6 @@ export class MessagingComponent implements OnInit, OnDestroy {
       sub.unsubscribe();
     }
     this.messagingService.disconnect();
-    this.subscribeToAllTopics();
   }
 
   onNewTopic(){
