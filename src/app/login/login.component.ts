@@ -7,10 +7,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+
+  username: string = '';
+
   constructor(private router: Router) {
   }
 
-  onClick(username:string){
-    this.router.navigate(['/messaging', username]);
+  onClick(){
+    if (this.username.trim() !== '') {
+    this.router.navigate(['/messaging', this.username]);
+  } else {
+    alert('Invalid username!')
+  }
   }
 }
