@@ -1,10 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
 
 // Third party
+import {MatDividerModule} from '@angular/material/divider';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatTabsModule} from '@angular/material/tabs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute} from '@angular/router';
 import {createSpyFromClass} from 'jasmine-auto-spies'; 
 import { Subject } from 'rxjs';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 // local
 import { MessagingComponent } from './messaging.component';
@@ -27,7 +35,15 @@ describe('MessagingComponent', () => {
         {provide: MessagingService, useValue: messagingServiceSpy},
       ],
       imports: [
+        MatDividerModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatTabsModule,
         RouterTestingModule,
+        FormsModule,
+        MatInputModule,
+        BrowserModule,
+        BrowserAnimationsModule,
       ],
     });
     fixture = TestBed.createComponent(MessagingComponent);
