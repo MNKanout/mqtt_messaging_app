@@ -86,4 +86,10 @@ describe('LoginComponent', () => {
 
       expect(window.alert).toHaveBeenCalled();
     });
+
+    it('Should have only one login card', ()=> {
+      const cards: MatCardModule[] = fixture.debugElement.
+      queryAll(By.css('mat-card'));
+      expect(cards.length).toBe(1);
+    });
 });
