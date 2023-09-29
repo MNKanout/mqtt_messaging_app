@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute} from '@angular/router';
 import {createSpyFromClass} from 'jasmine-auto-spies'; 
+import { Subject } from 'rxjs';
 
 // local
 import { MessagingComponent } from './messaging.component';
@@ -31,6 +32,10 @@ describe('MessagingComponent', () => {
     });
     fixture = TestBed.createComponent(MessagingComponent);
     component = fixture.componentInstance;
+
+    const subject = new Subject<boolean>()
+    messagingServiceSpy.getConnectedStatus.and.returnValue(subject.asObservable());
+    subject.next(true)
 
     fixture.detectChanges();
     route = TestBed.inject(ActivatedRoute);
