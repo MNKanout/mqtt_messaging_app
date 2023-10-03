@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, By } from '@angular/platform-browser';
 
 // Third party
 import {MatDividerModule} from '@angular/material/divider';
@@ -8,8 +8,7 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
 import {MatTabsModule} from '@angular/material/tabs';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute} from '@angular/router';
-import {createSpyFromClass} from 'jasmine-auto-spies'; 
+import {createSpyFromClass, Spy} from 'jasmine-auto-spies'; 
 import { Subject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,12 +23,15 @@ import { routes, usernameRoutingVariable } from '../routes';
 describe('MessagingComponent', () => {
   let component: MessagingComponent;
   let fixture: ComponentFixture<MessagingComponent>;
-  let route: ActivatedRoute;
   let router: Router;
+  let connectionStatusSubject: Subject<boolean>;
+  let messagingServiceSpy: Spy<MessagingService>;
 
   beforeEach(() => {
 
-    const messagingServiceSpy = createSpyFromClass(MessagingService);
+    // Initialize component dependencies
+    connectionStatusSubject = new Subject<boolean>();
+    messagingServiceSpy = createSpyFromClass(MessagingService);
 
     TestBed.configureTestingModule({
       declarations: [MessagingComponent],
@@ -41,7 +43,6 @@ describe('MessagingComponent', () => {
         MatFormFieldModule,
         MatSelectModule,
         MatTabsModule,
-        RouterTestingModule,
         FormsModule,
         MatInputModule,
         BrowserModule,
@@ -49,22 +50,21 @@ describe('MessagingComponent', () => {
         RouterTestingModule.withRoutes(routes)
       ],
     });
+
+    // Initialize component  
     fixture = TestBed.createComponent(MessagingComponent);
-    component = fixture.componentInstance;
+    component = fixture.componentInstance; // Component reference
 
-    const subject = new Subject<boolean>()
-    messagingServiceSpy.getConnectedStatus.and.returnValue(subject.asObservable());
-    subject.next(true)
-
-    fixture.detectChanges();
-    route = TestBed.inject(ActivatedRoute);
+    // Dependency injection
+    messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     router = TestBed.inject(Router);
-    router.initialNavigation();
+
+    // ngOnInit
+    fixture.detectChanges();
+
   });
 
   it('should create', () => {
-    const spyRoute = spyOn(route.snapshot.paramMap, 'get')
-    spyRoute.and.returnValue(usernameRoutingVariable);
     expect(component).toBeTruthy();
   });
 
@@ -80,5 +80,18 @@ describe('MessagingComponent', () => {
     tick();
     const currentRoute = router.routerState.snapshot.url;
     expect(currentRoute).toBe('/not-found');
-  }))
+  }));
+
+  it('Should display disconnected when connectionStatus is false', ()=>{
+    // Arrange
+    const connectionHeading: HTMLHeadingElement = fixture.debugElement.
+    query(By.css('h3[id="connectionStatus"]')).nativeElement;
+
+    // Act
+    connectionStatusSubject.next(false);
+    fixture.detectChanges();
+
+    // Assert
+    expect(connectionHeading.innerHTML).toBe('Disconnected');
+  });
 });
