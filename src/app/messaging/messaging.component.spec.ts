@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -13,17 +13,19 @@ import {createSpyFromClass} from 'jasmine-auto-spies';
 import { Subject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Router } from '@angular/router';
 
 // local
 import { MessagingComponent } from './messaging.component';
 import { MessagingService } from '../messaging.service';
-import { usernameRoutingVariable } from '../routes';
+import { routes, usernameRoutingVariable } from '../routes';
 
 
 describe('MessagingComponent', () => {
   let component: MessagingComponent;
   let fixture: ComponentFixture<MessagingComponent>;
   let route: ActivatedRoute;
+  let router: Router;
 
   beforeEach(() => {
 
@@ -44,6 +46,7 @@ describe('MessagingComponent', () => {
         MatInputModule,
         BrowserModule,
         BrowserAnimationsModule,
+        RouterTestingModule.withRoutes(routes)
       ],
     });
     fixture = TestBed.createComponent(MessagingComponent);
@@ -55,6 +58,7 @@ describe('MessagingComponent', () => {
 
     fixture.detectChanges();
     route = TestBed.inject(ActivatedRoute);
+    router = TestBed.inject(Router);
   });
 
   it('should create', () => {
@@ -62,4 +66,11 @@ describe('MessagingComponent', () => {
     spyRoute.and.returnValue(usernameRoutingVariable);
     expect(component).toBeTruthy();
   });
+
+  it('Should navigate to /messaging/username when username is supplied',fakeAsync(()=> {
+    router.navigate(['messaging', usernameRoutingVariable]);
+    tick();
+    const currentRoute = router.routerState.snapshot.url;
+    expect(currentRoute).toBe('/messaging/username');
+  }));
 });
