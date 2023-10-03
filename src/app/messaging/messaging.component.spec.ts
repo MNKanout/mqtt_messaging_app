@@ -59,6 +59,7 @@ describe('MessagingComponent', () => {
     fixture.detectChanges();
     route = TestBed.inject(ActivatedRoute);
     router = TestBed.inject(Router);
+    router.initialNavigation();
   });
 
   it('should create', () => {
@@ -73,4 +74,11 @@ describe('MessagingComponent', () => {
     const currentRoute = router.routerState.snapshot.url;
     expect(currentRoute).toBe('/messaging/username');
   }));
+
+  it('Should render 404 when username is not supplied', fakeAsync(()=>{
+    router.navigate(['/messaging']);
+    tick();
+    const currentRoute = router.routerState.snapshot.url;
+    expect(currentRoute).toBe('/not-found');
+  }))
 });

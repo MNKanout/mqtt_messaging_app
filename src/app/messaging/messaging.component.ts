@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
 import { Message } from '../message.interface';
@@ -22,14 +22,21 @@ export class MessagingComponent implements OnInit, OnDestroy {
   
 
   constructor(private route: ActivatedRoute,
-    private messagingService: MessagingService,){
+    private messagingService: MessagingService,
+    private router: Router){
   }
 
   ngOnInit(): void {
     // Getting data from active route
     const routeParms = this.route.snapshot.paramMap;
     this.username = routeParms.get(usernameRoutingVariable);
-    // 
+
+    // No username provided
+    if (!this.username) {
+      this.router.navigate(['not-found']);
+    }
+
+    // Connection observable
     const statusObservable$ = this.messagingService.getConnectedStatus();
     const subscription = statusObservable$.subscribe((isConnected)=>{
       if (isConnected){
