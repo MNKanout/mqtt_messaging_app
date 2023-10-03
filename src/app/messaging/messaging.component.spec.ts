@@ -94,4 +94,17 @@ describe('MessagingComponent', () => {
     // Assert
     expect(connectionHeading.innerHTML).toBe('Disconnected');
   });
+
+  it('Should display connected when connectionStatus is true', ()=>{
+    // Arrange
+    const connectionHeading: HTMLHeadingElement = fixture.debugElement.
+    query(By.css('h3[id="connectionStatus"]')).nativeElement;
+
+    // Act
+    connectionStatusSubject.next(true);
+    fixture.detectChanges();
+
+    // Assert
+    expect(connectionHeading.innerHTML).toBe('Connected');
+  });
 });
