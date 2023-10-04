@@ -49,7 +49,7 @@ describe('MessagingComponent', () => {
   let messagingServiceSpy: Spy<MessagingService>;
   let providers: Provider[];
   let imports: ImportElement[];
-
+  let messagingServiceSpy: Spy<MessagingService>;
   beforeEach(() => {
 
     // Initialize component dependencies
@@ -60,16 +60,16 @@ describe('MessagingComponent', () => {
       {provide: MessagingService, useValue: messagingServiceSpy},
     ];
     imports = [
-      MatDividerModule,
-      MatFormFieldModule,
-      MatSelectModule,
-      MatTabsModule,
-      RouterTestingModule,
-      FormsModule,
-      MatInputModule,
+      // MatDividerModule,
+      // MatFormFieldModule,
+      // MatSelectModule,
+      // MatTabsModule,
+      // RouterTestingModule,
+      // FormsModule,
+      // MatInputModule,
       BrowserModule,
       BrowserAnimationsModule,
-      RouterTestingModule.withRoutes(routes)
+      RouterTestingModule.withRoutes(routes),
     ];
 
     // TestBed.configureTestingModule({
@@ -80,9 +80,9 @@ describe('MessagingComponent', () => {
     // fixture = TestBed.createComponent(MessagingComponent);
     // component = fixture.componentInstance;
 
-    // Dependency injection
-    messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
-    connectionStatusSubject.next(false);
+    // const connectionStatusSubject = new Subject<boolean>()
+    // messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
+    // connectionStatusSubject.next(false);
 
     // fixture.detectChanges();
     // route = TestBed.inject(ActivatedRoute);
@@ -110,9 +110,13 @@ describe('MessagingComponent', () => {
 
   fit('Should display disconnected when connectionStatus is false', ()=>{
     // Arrange
+    const connectionStatusSubject = new Subject<boolean>();
+    messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     const dut = new Dut(providers, imports);
     dut.initialize();
     // Act
+    connectionStatusSubject.next(false);
+    dut.fixture.detectChanges();
     const connectionHeading = dut.page.getConnectionStatusHeading().innerText;
 
     // Assert
