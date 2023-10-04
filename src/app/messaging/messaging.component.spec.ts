@@ -120,4 +120,17 @@ describe('MessagingComponent', () => {
     // Assert
     expect(component.newTopic).toBe('test_channel');
   });
+
+  it ('Should add newTopic to topics when add-topic-button is clicked', ()=> {
+    // Arrange 
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
+    component.newTopic = 'test-topic';
+
+    // Act
+    button.click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.topics).toContain('test-topic');
+  });
 });
