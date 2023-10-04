@@ -107,4 +107,17 @@ describe('MessagingComponent', () => {
     // Assert
     expect(connectionHeading.innerHTML).toBe('Connected');
   });
+
+  it('Should bound topic-input to newTopic variable', ()=> {
+    // Arrange
+    const topicInput: HTMLInputElement = fixture.debugElement.query(By.css('input[id="topic-input"]')).nativeElement;
+    
+    // Act
+    topicInput.value = 'test_channel';
+    topicInput.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.newTopic).toBe('test_channel');
+  });
 });

@@ -8,7 +8,7 @@
         <h3>Topic</h3>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
-                <input matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
+                <input id="topic-input" matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
             </mat-form-field>
             <button mat-raised-button color="primary" (click)="onNewTopic()" type="button">Add topic</button>
         </div>
