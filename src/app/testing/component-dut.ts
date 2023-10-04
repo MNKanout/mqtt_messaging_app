@@ -1,6 +1,7 @@
 import { NO_ERRORS_SCHEMA, Provider, Type } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+export type ImportElement = any;
 /**
  * This class provides a way to create a [Device under test](https://en.wikipedia.org/wiki/Device_under_test)
  * object that encapsulates the `component`, `fixture` and `page` variables for
@@ -95,13 +96,13 @@ export class ComponentDut<TComp, TPage> {
   constructor(
     compCtor: Type<TComp>,
     providers: Provider[],
+    imports: ImportElement[],
   ) {
     TestBed.configureTestingModule({
-      imports: [
-      ],
+      imports: imports,
       declarations: [compCtor],
       providers: providers,
-      schemas: [NO_ERRORS_SCHEMA] // We only test TComp, no dependencies.
+      schemas: [NO_ERRORS_SCHEMA], // We only test TComp, no dependencies.
     })
       .compileComponents();
     this.component = undefined as any;
@@ -109,7 +110,7 @@ export class ComponentDut<TComp, TPage> {
     this.page = undefined as any;
   }
 
-  initialize(
+  initializeComp(
     compCtor: Type<TComp>,
     pageCtor: Type<TPage>,
   ) {

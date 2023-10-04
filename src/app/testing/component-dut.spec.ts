@@ -34,10 +34,10 @@ class HelloWorldComponentPage extends ComponentPage<HelloWorldComponent> {
 
 class Dut extends ComponentDut<HelloWorldComponent, HelloWorldComponentPage> {
   constructor(providers: Provider[]) {
-    super(HelloWorldComponent, providers);
+    super(HelloWorldComponent, providers, []);
   }
-  override initialize() {
-    return super.initialize(HelloWorldComponent, HelloWorldComponentPage);
+  initialize() {
+    return super.initializeComp(HelloWorldComponent, HelloWorldComponentPage);
   }
 }
 
