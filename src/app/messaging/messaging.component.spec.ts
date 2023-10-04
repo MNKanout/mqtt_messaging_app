@@ -133,4 +133,17 @@ describe('MessagingComponent', () => {
     // Assert
     expect(component.topics).toContain('test-topic');
   });
+
+  it ('Should set newTopic to "" when add-topic-button is clicked', ()=> {
+    // Arrange
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
+
+    // Act
+    component.newTopic = 'test-topic';
+    button.click();
+    fixture.detectChanges();
+
+    // Assert
+    expect(component.newTopic).toBe("");
+  });
 });
