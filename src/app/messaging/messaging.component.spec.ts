@@ -49,7 +49,6 @@ describe('MessagingComponent', () => {
   let messagingServiceSpy: Spy<MessagingService>;
   let providers: Provider[];
   let imports: ImportElement[];
-  let messagingServiceSpy: Spy<MessagingService>;
   beforeEach(() => {
 
     // Initialize component dependencies
@@ -60,13 +59,12 @@ describe('MessagingComponent', () => {
       {provide: MessagingService, useValue: messagingServiceSpy},
     ];
     imports = [
-      // MatDividerModule,
-      // MatFormFieldModule,
-      // MatSelectModule,
-      // MatTabsModule,
-      // RouterTestingModule,
-      // FormsModule,
-      // MatInputModule,
+      MatDividerModule,
+      MatFormFieldModule,
+      MatSelectModule,
+      MatTabsModule,
+      FormsModule,
+      MatInputModule,
       BrowserModule,
       BrowserAnimationsModule,
       RouterTestingModule.withRoutes(routes),
@@ -85,16 +83,22 @@ describe('MessagingComponent', () => {
     // connectionStatusSubject.next(false);
 
     // fixture.detectChanges();
-    // route = TestBed.inject(ActivatedRoute);
     // router = TestBed.inject(Router);
-    // router.initialNavigation();
+  });
+  fit('should create', () => {
+    // Arrange
+    const dut = new Dut(providers, imports);
+    messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
+    dut.initialize();
+
+    // Act
+    connectionStatusSubject.next(false);
+
+    // Assert
+    expect(dut).toBeTruthy();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('Should navigate to /messaging/username when username is supplied',fakeAsync(()=> {
+  it('Should navigate to /messaging/username when username is supplied', fakeAsync(()=> {
     router.navigate(['messaging', usernameRoutingVariable]);
     tick();
     const currentRoute = router.routerState.snapshot.url;
@@ -102,7 +106,7 @@ describe('MessagingComponent', () => {
   }));
 
   it('Should render 404 when username is not supplied', fakeAsync(()=>{
-    router.navigate(['/messaging']);
+    router.navigate(['/messaging/']);
     tick();
     const currentRoute = router.routerState.snapshot.url;
     expect(currentRoute).toBe('/not-found');
@@ -110,10 +114,10 @@ describe('MessagingComponent', () => {
 
   fit('Should display disconnected when connectionStatus is false', ()=>{
     // Arrange
-    const connectionStatusSubject = new Subject<boolean>();
-    messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     const dut = new Dut(providers, imports);
+    messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     dut.initialize();
+
     // Act
     connectionStatusSubject.next(false);
     dut.fixture.detectChanges();
@@ -149,7 +153,7 @@ describe('MessagingComponent', () => {
     expect(component.newTopic).toBe('test_channel');
   });
 
-  it ('Should add newTopic to topics when add-topic-button is clicked', ()=> {
+  it('Should add newTopic to topics when add-topic-button is clicked', ()=> {
     // Arrange 
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
     component.newTopic = 'test-topic';
@@ -162,7 +166,7 @@ describe('MessagingComponent', () => {
     expect(component.topics).toContain('test-topic');
   });
 
-  it ('Should set newTopic to "" when add-topic-button is clicked', ()=> {
+  it('Should set newTopic to "" when add-topic-button is clicked', ()=> {
     // Arrange
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
 
