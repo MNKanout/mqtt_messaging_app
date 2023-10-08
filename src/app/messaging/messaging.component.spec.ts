@@ -146,4 +146,21 @@ describe('MessagingComponent', () => {
     // Assert
     expect(component.newTopic).toBe("");
   });
+
+  it('Should dynamically display topics in the select element', ()=>{
+    // Arrange
+    const trigger = fixture.debugElement.query(By.css('mat-select')).nativeElement;
+    component.topics = ['test_channel_1','test_channel_2','test_channel_3']
+    fixture.detectChanges();
+
+    // Act
+    trigger.click();
+    fixture.detectChanges();
+    const options = fixture.debugElement.queryAll(By.css('mat-option'));
+
+    // Assert
+    expect(options[0].nativeElement.innerText).toEqual('test_channel_1');
+    expect(options[1].nativeElement.innerText).toEqual('test_channel_2');
+    expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
+  });
 });
