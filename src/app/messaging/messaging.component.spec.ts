@@ -163,4 +163,17 @@ describe('MessagingComponent', () => {
     expect(options[1].nativeElement.innerText).toEqual('test_channel_2');
     expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
   });
+
+  it('Should call connect and subscribe methods when subscribe button is clicked',()=>{
+    // Arrange
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
+    spyOn(component, 'subscribeToAllTopics').and.callThrough();
+
+    // Act 
+    button.click()
+
+    // Assert
+    expect(component.subscribeToAllTopics).toHaveBeenCalled();
+    expect(messagingServiceSpy.connect).toHaveBeenCalled();
+  });
 });
