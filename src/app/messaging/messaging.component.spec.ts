@@ -127,17 +127,19 @@ describe('MessagingComponent', () => {
     expect(connectionHeading).toEqual('Disconnected');
   });
 
-  it('Should display connected when connectionStatus is true', ()=>{
+  fit('Should display connected when connectionStatus is true', ()=>{
     // Arrange
-    const connectionHeading: HTMLHeadingElement = fixture.debugElement.
-    query(By.css('h3[id="connectionStatus"]')).nativeElement;
+    const dut = new Dut(providers, imports);
+    messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
+    dut.initialize();
 
     // Act
     connectionStatusSubject.next(true);
-    fixture.detectChanges();
+    dut.fixture.detectChanges();
+    const connectionHeading = dut.page.getConnectionStatusHeading().innerText;
 
     // Assert
-    expect(connectionHeading.innerHTML).toBe('Connected');
+    expect(connectionHeading).toEqual('Connected');
   });
 
   it('Should bound topic-input to newTopic variable', ()=> {
