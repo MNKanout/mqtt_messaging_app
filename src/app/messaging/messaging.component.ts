@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
 import { Message } from '../message.interface';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-messaging',
@@ -17,10 +17,10 @@ export class MessagingComponent implements OnInit, OnDestroy {
   currentTopic: string = 'channel_1';
   newTopic: string = '';
   topics: string[] = [];
-  subscriptions: Subscription[] = [];
+  destroyed$ = new Subject<void>();
   connectedStatus: string = '';
-  
 
+  
   constructor(private route: ActivatedRoute,
     private messagingService: MessagingService,
     private router: Router){
@@ -38,20 +38,24 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
     // Connection observable
     const statusObservable$ = this.messagingService.getConnectedStatus();
-    const subscription = statusObservable$.subscribe((isConnected)=>{
-      if (isConnected){
-        this.connectedStatus = 'Connected';
-      } else {
-        this.connectedStatus = 'Disconnected';
-      }
-    });
-    this.subscriptions.push(subscription);
+    statusObservable$
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((isConnected)=>{
+        if (isConnected){
+          this.connectedStatus = 'Connected';
+        } else {
+          this.connectedStatus = 'Disconnected';
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    for(let sub of this.subscriptions){
-      sub.unsubscribe();
-    }
+    // Unsubscribe observables
+    this.destroyed$.next();
+    this.destroyed$.complete();
+
     this.disconnect();
   }
 
@@ -61,9 +65,6 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   disconnect(){
-    for (let sub of this.subscriptions){
-      sub.unsubscribe();
-    }
     this.messagingService.disconnect();
   }
 
@@ -80,20 +81,24 @@ export class MessagingComponent implements OnInit, OnDestroy {
     }
     // Observable for sending messages
     const observable$ = this.messagingService.publish(message);
-    const subscription = observable$.subscribe();
-    this.subscriptions.push(subscription);
+    observable$.
+    pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe();
   }
 
   subscribeToAllTopics(){
     // Observable for recieving messages
     const observable$ = this.messagingService.subscribe(this.currentTopic);
-    // Wait for an event, then do the following
-    const subscription =  observable$.subscribe((event)=>{
+    observable$
+    .pipe(
+      takeUntil(this.destroyed$)
+    )
+    .subscribe((event)=>{
       this.messages.push(
         {'text': new TextDecoder().decode(event.payload),
         'topic': event.topic,
       });
     });
-    this.subscriptions.push(subscription);
   }
 }
