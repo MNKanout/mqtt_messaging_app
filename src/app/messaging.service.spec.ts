@@ -43,4 +43,12 @@ describe('MessagingService', () => {
     // Assert
     expect(mqttServiceSpy.disconnect).toHaveBeenCalled();
   });
+
+  it('Should publish',()=>{
+    // Act 
+    service.publish({topic:'test_topic',text:'test_text'})
+
+    // Assert
+    expect(mqttServiceSpy.publish).toHaveBeenCalled()
+  })
 });
