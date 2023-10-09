@@ -18,7 +18,19 @@ import { Router } from '@angular/router';
 import { MessagingComponent } from './messaging.component';
 import { MessagingService } from '../messaging.service';
 import { routes, usernameRoutingVariable } from '../routes';
+import { Message } from '../message.interface';
+import { IMqttMessage } from 'ngx-mqtt';
 
+function createIMqttMessage(topic:string, text:string): IMqttMessage {
+  return {
+    topic: topic,
+    payload: new TextEncoder().encode(text),
+    qos: 0,
+    retain: true,
+    dup: false,
+    cmd: 'publish'
+  };
+}
 
 describe('MessagingComponent', () => {
   let component: MessagingComponent;
@@ -175,5 +187,19 @@ describe('MessagingComponent', () => {
     // Assert
     expect(component.subscribeToAllTopics).toHaveBeenCalled();
     expect(messagingServiceSpy.connect).toHaveBeenCalled();
+  });
+
+  it('Should push new message when subscribeToAll method is called',()=>{
+    // Arrange
+    const topicObservable$ = new Subject<IMqttMessage>();
+    messagingServiceSpy.subscribe.and.returnValue(topicObservable$.asObservable());
+    const mqttObject: IMqttMessage = createIMqttMessage('test_channel','test_text');
+
+    // Act
+    component.subscribeToAllTopics();
+    topicObservable$.next(mqttObject);
+
+    // Assert
+    expect(component.messages).toEqual([{'topic':'test_channel','text':'test_text'}]);
   });
 });

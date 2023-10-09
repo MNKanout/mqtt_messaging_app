@@ -79,23 +79,22 @@ export class MessagingComponent implements OnInit, OnDestroy {
       text: message,
     }
     function myFunction(){console.log('Publisher sent:', message)};
+    // Observable for sending messages
     const observable$ = this.messagingService.publish(msg);
     const subscription = observable$.subscribe(myFunction);
     this.subscriptions.push(subscription);
   }
 
   subscribeToAllTopics(){
+    // Observable for recieving messages
     const observable$ = this.messagingService.subscribe(this.currentTopic);
-    const subscription =  observable$.subscribe((msg)=>{
+    // Wait for an event, then do the following
+    const subscription =  observable$.subscribe((event)=>{
       this.messages.push(
-        {'text': msg.payload.toString(),
-        'topic': msg.topic,
+        {'text': new TextDecoder().decode(event.payload),
+        'topic': event.topic,
       });
     });
     this.subscriptions.push(subscription);
   }
-
-
-
-
 }
