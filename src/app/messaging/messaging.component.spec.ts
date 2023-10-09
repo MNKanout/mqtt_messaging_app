@@ -202,4 +202,21 @@ describe('MessagingComponent', () => {
     // Assert
     expect(component.messages).toEqual([{'topic':'test_channel','text':'test_text'}]);
   });
+
+  it('Should call publish method when publish button is clicked', ()=>{
+    // Arrange
+    const message: Message = {topic:'test_topic', text:'test_text'};
+    const publishObservable$ = new Subject<void>();
+    messagingServiceSpy.publish.and.returnValue(publishObservable$);
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
+    component.currentTopic = message.topic;
+
+    // Act
+    input.value = message.text;
+    button.click();
+
+    // Assert
+    expect(messagingServiceSpy.publish).toHaveBeenCalledWith(message);
+  });
 });

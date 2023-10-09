@@ -28,9 +28,9 @@
         <h3>Message</h3>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
-                <input matInput #message placeholder="messsage" type="text">
+                <input id="message-text" matInput #message placeholder="messsage" type="text">
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="publish(message.value)" type="button">Send</button>
+            <button id="publish-button" mat-raised-button color="primary" (click)="publish(message.value)" type="button">Send</button>
         </div>
         <mat-divider></mat-divider>
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
