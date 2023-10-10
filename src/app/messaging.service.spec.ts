@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 // Third party
 import { MqttModule, MqttService } from 'ngx-mqtt';
 import { createSpyFromClass } from 'jasmine-auto-spies';
+import { Subject } from 'rxjs';
 
 // local 
 import { MessagingService } from './messaging.service';
@@ -45,10 +46,14 @@ describe('MessagingService', () => {
   });
 
   it('Should publish',()=>{
+    // Arrange
+    mqttServiceSpy.publish.and.returnValue(new Subject<void>());
+    
     // Act 
-    service.publish({topic:'test_topic',text:'test_text'})
+    const publish$ = service.publish({topic:'test_topic',text:'test_text'});
 
     // Assert
-    expect(mqttServiceSpy.publish).toHaveBeenCalled()
-  })
+    expect(mqttServiceSpy.publish).toHaveBeenCalledWith('test_topic','test_text');
+    expect(publish$).toEqual(new Subject<void>());
+  });
 });
