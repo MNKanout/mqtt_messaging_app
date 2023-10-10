@@ -1,16 +1,16 @@
   <div fxLayout="column" fxLayoutAlign="space-around">
     <div>
         <h3>Welcome {{username}}</h3>
-        <h3>{{connectedStatus}}</h3>
+        <h3 id="connectionStatus">{{connectedStatus}}</h3>
         <mat-divider></mat-divider>
     </div>
     <div>
         <h3>Topic</h3>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
-                <input matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
+                <input id="topic-input" matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="onNewTopic()" type="button">Add topic</button>
+            <button id="add-topic-button" mat-raised-button color="primary" (click)="onNewTopic()" type="button">Add topic</button>
         </div>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
@@ -20,7 +20,7 @@
                     {{topic}}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="onSubscribe()">Subscribe</button>
+            <button id="subscribe-button" mat-raised-button color="primary" (click)="onSubscribe()">Subscribe</button>
         </div>
     </div>
     <mat-divider></mat-divider>
@@ -28,9 +28,9 @@
         <h3>Message</h3>
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
-                <input matInput #message placeholder="messsage" type="text">
+                <input id="message-text" matInput #message placeholder="messsage" type="text">
             </mat-form-field>
-            <button mat-raised-button color="primary" (click)="publish(message.value)" type="button">Send</button>
+            <button id="publish-button" mat-raised-button color="primary" (click)="publish(message.value)" type="button">Send</button>
         </div>
         <mat-divider></mat-divider>
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">

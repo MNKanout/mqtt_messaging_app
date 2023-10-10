@@ -11,5 +11,7 @@ export const routes: Route[] = [
     {path:'', component: HomeComponent},
     {path:'login', component: LoginComponent},
     {path:'messaging/:'+ usernameRoutingVariable, component: MessagingComponent},
-    {path:'**', component:NotFoundComponent},
-  ]
+    {path:'not-found', component:NotFoundComponent},
+    // Wildcard for undefined urls.
+    {path:'**', redirectTo: 'not-found', pathMatch:'full'},
+  ];

@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
 import { Message } from '../message.interface';
-import { Subscription } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-messaging',
@@ -17,34 +17,45 @@ export class MessagingComponent implements OnInit, OnDestroy {
   currentTopic: string = 'channel_1';
   newTopic: string = '';
   topics: string[] = [];
-  subscriptions: Subscription[] = [];
+  destroyed$ = new Subject<void>();
   connectedStatus: string = '';
-  
 
+  
   constructor(private route: ActivatedRoute,
-    private messagingService: MessagingService,){
+    private messagingService: MessagingService,
+    private router: Router){
   }
 
   ngOnInit(): void {
     // Getting data from active route
     const routeParms = this.route.snapshot.paramMap;
     this.username = routeParms.get(usernameRoutingVariable);
-    // 
+
+    // No username provided
+    if (!this.username) {
+      this.router.navigate(['not-found']);
+    }
+
+    // Connection observable
     const statusObservable$ = this.messagingService.getConnectedStatus();
-    const subscription = statusObservable$.subscribe((isConnected)=>{
-      if (isConnected){
-        this.connectedStatus = 'Connected';
-      } else {
-        this.connectedStatus = 'Disconnected';
-      }
-    });
-    this.subscriptions.push(subscription);
+    statusObservable$
+      .pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((isConnected)=>{
+        if (isConnected){
+          this.connectedStatus = 'Connected';
+        } else {
+          this.connectedStatus = 'Disconnected';
+        }
+      });
   }
 
   ngOnDestroy(): void {
-    for(let sub of this.subscriptions){
-      sub.unsubscribe();
-    }
+    // Unsubscribe observables
+    this.destroyed$.next();
+    this.destroyed$.complete();
+
     this.disconnect();
   }
 
@@ -54,9 +65,6 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   disconnect(){
-    for (let sub of this.subscriptions){
-      sub.unsubscribe();
-    }
     this.messagingService.disconnect();
   }
 
@@ -66,29 +74,31 @@ export class MessagingComponent implements OnInit, OnDestroy {
     console.log(this.topics)
   }
 
-  publish(message: string){
-    const msg: Message = {
+  publish(message_text: string){
+    const message: Message = {
       topic: this.currentTopic,
-      text: message,
+      text: message_text,
     }
-    function myFunction(){console.log('Publisher sent:', message)};
-    const observable$ = this.messagingService.publish(msg);
-    const subscription = observable$.subscribe(myFunction);
-    this.subscriptions.push(subscription);
+    // Observable for sending messages
+    const observable$ = this.messagingService.publish(message);
+    observable$.
+    pipe(
+      takeUntil(this.destroyed$)
+    ).subscribe();
   }
 
   subscribeToAllTopics(){
+    // Observable for recieving messages
     const observable$ = this.messagingService.subscribe(this.currentTopic);
-    const subscription =  observable$.subscribe((msg)=>{
+    observable$
+    .pipe(
+      takeUntil(this.destroyed$)
+    )
+    .subscribe((event)=>{
       this.messages.push(
-        {'text': msg.payload.toString(),
-        'topic': msg.topic,
+        {'text': new TextDecoder().decode(event.payload),
+        'topic': event.topic,
       });
     });
-    this.subscriptions.push(subscription);
   }
-
-
-
-
 }
