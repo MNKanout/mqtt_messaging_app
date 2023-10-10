@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 // Third party
-import { MqttModule, MqttService } from 'ngx-mqtt';
+import { IMqttMessage, MqttModule, MqttService } from 'ngx-mqtt';
 import { createSpyFromClass } from 'jasmine-auto-spies';
 import { Subject } from 'rxjs';
 
@@ -55,5 +55,17 @@ describe('MessagingService', () => {
     // Assert
     expect(mqttServiceSpy.publish).toHaveBeenCalledWith('test_topic','test_text');
     expect(publish$).toEqual(new Subject<void>());
+  });
+
+  it('Should subscribe',()=>{
+    // Arrange
+    mqttServiceSpy.observe.and.returnValue(new Subject<IMqttMessage>());
+
+    // Act
+    const subscribe$ = service.subscribe('test_topic');
+
+    // Assert
+    expect(mqttServiceSpy.observe).toHaveBeenCalledOnceWith('test_topic');
+    expect(subscribe$).toEqual(new Subject<IMqttMessage>());
   });
 });
