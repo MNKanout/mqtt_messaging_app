@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
+// Third-party
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+// Local
 import { SnackBarComponent } from './snack-bar.component';
 
 describe('SnackBarComponent', () => {
@@ -8,7 +12,8 @@ describe('SnackBarComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SnackBarComponent]
+      declarations: [SnackBarComponent],
+      providers: [MatSnackBar],
     });
     fixture = TestBed.createComponent(SnackBarComponent);
     component = fixture.componentInstance;

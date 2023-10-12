@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // local
 import { MessagingComponent } from './messaging.component';
@@ -20,6 +21,7 @@ import { MessagingService } from '../messaging.service';
 import { routes, usernameRoutingVariable } from '../routes';
 import { Message } from '../message.interface';
 import { IMqttMessage } from 'ngx-mqtt';
+import { SnackBarComponent } from '../snack-bar/snack-bar.component';
 
 function createIMqttMessage(topic:string, text:string): IMqttMessage {
   return {
@@ -46,7 +48,7 @@ describe('MessagingComponent', () => {
     messagingServiceSpy = createSpyFromClass(MessagingService);
 
     TestBed.configureTestingModule({
-      declarations: [MessagingComponent],
+      declarations: [MessagingComponent, SnackBarComponent],
       providers: [
         {provide: MessagingService, useValue: messagingServiceSpy},
       ],
@@ -59,7 +61,8 @@ describe('MessagingComponent', () => {
         MatInputModule,
         BrowserModule,
         BrowserAnimationsModule,
-        RouterTestingModule.withRoutes(routes)
+        RouterTestingModule.withRoutes(routes),
+        MatSnackBarModule,
       ],
     });
 
