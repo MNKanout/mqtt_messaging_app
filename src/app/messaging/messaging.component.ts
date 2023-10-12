@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
 import { Message } from '../message.interface';
 import { Subject, takeUntil } from 'rxjs';
+import { SnackBarComponent } from '../snack-bar/snack-bar.component';
 
 @Component({
   selector: 'app-messaging',
@@ -11,6 +12,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./messaging.component.css']
 })
 export class MessagingComponent implements OnInit, OnDestroy {
+  @ViewChild(SnackBarComponent) snackBarCompontent!: SnackBarComponent;
 
   username: string | null = '';
   messages: Message[] = [];
