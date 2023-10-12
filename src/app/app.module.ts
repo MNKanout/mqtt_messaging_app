@@ -25,6 +25,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatCardModule} from '@angular/material/card';
+import { SnackBarComponent } from './snack-bar/snack-bar.component';
 
 
 @NgModule({
@@ -34,6 +35,7 @@ import {MatCardModule} from '@angular/material/card';
     HomeComponent,
     MessagingComponent,
     NotFoundComponent,
+    SnackBarComponent,
   ],
   imports: [
     BrowserModule,
