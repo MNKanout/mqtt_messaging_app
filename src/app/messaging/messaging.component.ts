@@ -16,7 +16,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   username: string | null = '';
   messages: Message[] = [];
-  currentTopic: string = 'channel_1';
+  currentTopic: string = '';
   newTopic: string = '';
   topics: string[] = [];
   destroyed$ = new Subject<void>();
@@ -71,9 +71,26 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   onNewTopic(){
+    // Empty topic
+    if (!this.newTopic) {
+      this.snackBarCompontent.notfiyWarrning("Can't add an empty topic");
+      return;
+    }
+
+    // Already added topic
+    if (this.topics.includes(this.newTopic)){
+      this.snackBarCompontent.notfiyWarrning('"'+this.newTopic +'"'+ ' is already added!');
+      return;
+    }
+      
+    
     this.topics.push(this.newTopic);
-    this.newTopic = '';
-    console.log(this.topics)
+    if (this.topics.includes(this.newTopic)){
+      this.snackBarCompontent.notfiySuccess('Added "'+ this.newTopic + '" successfully');
+      this.newTopic = '';
+    } else {
+      this.snackBarCompontent.notfiyDanger('Was unable to add ' + this.newTopic);
+    }
   }
 
   publish(message_text: string){
