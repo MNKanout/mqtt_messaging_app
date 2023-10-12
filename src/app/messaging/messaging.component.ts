@@ -29,6 +29,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.messagingService.connect();
+    
     // Getting data from active route
     const routeParms = this.route.snapshot.paramMap;
     this.username = routeParms.get(usernameRoutingVariable);
@@ -62,7 +64,6 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   onSubscribe(){
-    this.messagingService.connect();
     this.subscribeToAllTopics();
   }
 
