@@ -213,10 +213,13 @@ describe('MessagingComponent', () => {
     const message: Message = {topic:'test_topic', text:'test_text'};
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
     const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
+    const event = new InputEvent('input');
 
     // Act
-    component.currentTopic = message.topic;
-    component.textMessage = message.text;
+    component.currentTopic = message.topic; // Select topic
+    component.subscribedToTopics.push(component.currentTopic); // Subscribe to topic
+    input.value = message.text; // Add text message
+    input.dispatchEvent(event);
     button.click();
 
     // Assert

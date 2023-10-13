@@ -104,6 +104,30 @@ export class MessagingComponent implements OnInit, OnDestroy {
     }
   }
 
+  onPublish(){
+    // Empty text message
+    if(!this.textMessage){
+      this.snackBarCompontent.notfiyWarrning('Please enter a message!');
+      return;
+    }
+
+    // Not subscribed to any topic
+    if (this.subscribedToTopics.length === 0){
+      this.snackBarCompontent.notfiyWarrning('Not subscribed to any topic yet!');
+      return;
+    }
+
+    // Not subscribed to selected topic
+    if (!this.subscribedToTopics.includes(this.currentTopic)){
+      this.snackBarCompontent.notfiyWarrning('Not subscribed to "' + this.currentTopic + '" yet!');
+      return;
+    }
+    
+    this.publish();
+    this.snackBarCompontent.notfiySuccess('Message published!');
+    this.textMessage = '';
+  }
+
   publish(){
     const message: Message = {
       topic: this.currentTopic,
@@ -118,7 +142,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   subscribeToCurrentTopic(){
-    // Observable for recieving messages
+    // Observable for receiving messages
     const observable$ = this.messagingService.subscribe(this.currentTopic);
     observable$
     .pipe(
