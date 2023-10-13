@@ -21,6 +21,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   topics: string[] = [];
   destroyed$ = new Subject<void>();
   connectedStatus: string = '';
+  subscribedToTopics: string[] = [];
 
   
   constructor(private route: ActivatedRoute,
@@ -64,7 +65,19 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   onSubscribe(){
-    this.subscribeToAllTopics();
+    if (!this.currentTopic) {
+      this.snackBarCompontent.notfiyWarrning('Please select a topic!');
+      return;
+    } 
+
+    if (this.subscribedToTopics.includes(this.currentTopic)){
+      this.snackBarCompontent.notfiyWarrning('Already subscribed to "' + this.currentTopic + '"')
+      return;
+    }
+
+    this.subscribeToCurrentTopic();
+    this.subscribedToTopics.push(this.currentTopic);
+    this.snackBarCompontent.notfiySuccess('Subscribed to "' + this.currentTopic + '"');
   }
 
   disconnect(){
@@ -107,7 +120,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  subscribeToAllTopics(){
+  subscribeToCurrentTopic(){
     // Observable for recieving messages
     const observable$ = this.messagingService.subscribe(this.currentTopic);
     observable$

@@ -179,17 +179,17 @@ describe('MessagingComponent', () => {
     expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
   });
 
-  it('Should call connect and subscribe methods when subscribe button is clicked',()=>{
+  it('Should subscribe to non-empty currentTopic when subscribe button is clicked',()=>{
     // Arrange
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-    spyOn(component, 'subscribeToAllTopics').and.callThrough();
+    component.currentTopic = 'Test-topic';
+    spyOn(component, 'subscribeToCurrentTopic').and.callThrough();
 
     // Act 
     button.click()
 
     // Assert
-    expect(component.subscribeToAllTopics).toHaveBeenCalled();
-    expect(messagingServiceSpy.connect).toHaveBeenCalled();
+    expect(component.subscribeToCurrentTopic).toHaveBeenCalled();
   });
 
   it('Should push new message when subscribeToAll method is called',()=>{
@@ -199,7 +199,7 @@ describe('MessagingComponent', () => {
     const mqttObject: IMqttMessage = createIMqttMessage('test_channel','test_text');
 
     // Act
-    component.subscribeToAllTopics();
+    component.subscribeToCurrentTopic();
     topicObservable$.next(mqttObject);
 
     // Assert
