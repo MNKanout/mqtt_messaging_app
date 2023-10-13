@@ -208,15 +208,15 @@ describe('MessagingComponent', () => {
 
   it('Should call publish method when publish button is clicked', ()=>{
     // Arrange
-    const message: Message = {topic:'test_topic', text:'test_text'};
     const publishObservable$ = new Subject<void>();
     messagingServiceSpy.publish.and.returnValue(publishObservable$);
+    const message: Message = {topic:'test_topic', text:'test_text'};
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
     const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
-    component.currentTopic = message.topic;
 
     // Act
-    input.value = message.text;
+    component.currentTopic = message.topic;
+    component.textMessage = message.text;
     button.click();
 
     // Assert

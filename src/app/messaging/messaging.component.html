@@ -50,10 +50,10 @@
         <!-- Message-publish -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
-                <input id="message-text" matInput #message placeholder="messsage" type="text">
+                <input id="message-text" matInput [(ngModel)]="textMessage" placeholder="messsage" type="text">
             </mat-form-field>
             <button id="publish-button" mat-raised-button color="primary" 
-            (click)="publish(message.value)" type="button">Send</button>
+            (click)="publish()" type="button">Send</button>
         </div>
         <!-- End of message-publish -->
 

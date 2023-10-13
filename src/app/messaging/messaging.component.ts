@@ -22,6 +22,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
   destroyed$ = new Subject<void>();
   connectedStatus: string = '';
   subscribedToTopics: string[] = [];
+  textMessage: string = '';
 
   
   constructor(private route: ActivatedRoute,
@@ -103,10 +104,10 @@ export class MessagingComponent implements OnInit, OnDestroy {
     }
   }
 
-  publish(message_text: string){
+  publish(){
     const message: Message = {
       topic: this.currentTopic,
-      text: message_text,
+      text: this.textMessage,
     }
     // Observable for sending messages
     const observable$ = this.messagingService.publish(message);
