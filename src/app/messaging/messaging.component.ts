@@ -61,7 +61,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
 
-    this.disconnect();
+    this.messagingService.disconnect();
   }
 
   onSubscribe(){
@@ -78,11 +78,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
     this.subscribeToCurrentTopic();
     this.subscribedToTopics.push(this.currentTopic);
     this.snackBarCompontent.notfiySuccess('Subscribed to "' + this.currentTopic + '"');
-  }
-
-  disconnect(){
-    this.messagingService.disconnect();
-  }
+    }
 
   onNewTopic(){
     // Empty topic

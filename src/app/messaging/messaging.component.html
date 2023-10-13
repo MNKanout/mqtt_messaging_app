@@ -1,17 +1,30 @@
-  <div fxLayout="column" fxLayoutAlign="space-around">
+<!-- Main container -->
+<div fxLayout="column" fxLayoutAlign="space-around">
+
+    <!-- Status -->
     <div>
         <h3>Welcome {{username}}</h3>
         <h3 id="connectionStatus">{{connectedStatus}}</h3>
         <mat-divider></mat-divider>
     </div>
+    <!-- End of Status -->
+
+    <!-- Topics -->
     <div>
         <h3>Topic</h3>
+
+        <!-- New-topic -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
-                <input id="topic-input" matInput [(ngModel)]="newTopic" placeholder="New topic name" type="text">
+                <input id="topic-input" matInput [(ngModel)]="newTopic" 
+                placeholder="New topic name" type="text">
             </mat-form-field>
-            <button id="add-topic-button" mat-raised-button color="primary" (click)="onNewTopic()" type="button">Add topic</button>
+            <button id="add-topic-button" mat-raised-button color="primary" 
+            (click)="onNewTopic()" type="button">Add topic</button>
         </div>
+        <!-- End of New-topic -->
+
+        <!-- Topic-selection -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
                 <mat-label>Select topic</mat-label>
@@ -20,25 +33,47 @@
                     {{topic}}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <button id="subscribe-button" mat-raised-button color="primary" (click)="onSubscribe()">Subscribe</button>
+            <button id="subscribe-button" mat-raised-button color="primary" 
+            (click)="onSubscribe()">Subscribe</button>
         </div>
+        <!-- End of Topic-selection -->
+
     </div>
+    <!-- End of topic section -->
+
     <mat-divider></mat-divider>
+
+    <!-- Messages -->
     <div>
         <h3>Message</h3>
+
+        <!-- Message-publish -->
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
                 <input id="message-text" matInput #message placeholder="messsage" type="text">
             </mat-form-field>
-            <button id="publish-button" mat-raised-button color="primary" (click)="publish(message.value)" type="button">Send</button>
+            <button id="publish-button" mat-raised-button color="primary" 
+            (click)="publish(message.value)" type="button">Send</button>
         </div>
+        <!-- End of message-publish -->
+
         <mat-divider></mat-divider>
+
+        <!-- Messages-display -->
         <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="end">
             <mat-tab label={{message.topic}} *ngFor="let message of messages">
                 <p>{{'Topic: ' + message.topic}}</p>
                 <p>{{'Message: ' + message.text}}</p>
             </mat-tab>
         </mat-tab-group>
+        <!-- End of Messages-display -->
+        
     </div>
+    <!-- End of messages section -->
+
+    <!-- Notification section -->
     <app-snack-bar></app-snack-bar>
-</div> 
+    <!-- End of notification section -->
+
+</div>
+<!-- End of main container -->
