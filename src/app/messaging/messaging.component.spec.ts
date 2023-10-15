@@ -13,6 +13,7 @@ import { Subject } from 'rxjs';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // local
 import { MessagingComponent } from './messaging.component';
@@ -20,6 +21,7 @@ import { MessagingService } from '../messaging.service';
 import { routes, usernameRoutingVariable } from '../routes';
 import { Message } from '../message.interface';
 import { IMqttMessage } from 'ngx-mqtt';
+import { SnackBarComponent } from '../snack-bar/snack-bar.component';
 
 function createIMqttMessage(topic:string, text:string): IMqttMessage {
   return {
@@ -46,7 +48,7 @@ describe('MessagingComponent', () => {
     messagingServiceSpy = createSpyFromClass(MessagingService);
 
     TestBed.configureTestingModule({
-      declarations: [MessagingComponent],
+      declarations: [MessagingComponent, SnackBarComponent],
       providers: [
         {provide: MessagingService, useValue: messagingServiceSpy},
       ],
@@ -59,7 +61,8 @@ describe('MessagingComponent', () => {
         MatInputModule,
         BrowserModule,
         BrowserAnimationsModule,
-        RouterTestingModule.withRoutes(routes)
+        RouterTestingModule.withRoutes(routes),
+        MatSnackBarModule,
       ],
     });
 
@@ -176,17 +179,17 @@ describe('MessagingComponent', () => {
     expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
   });
 
-  it('Should call connect and subscribe methods when subscribe button is clicked',()=>{
+  it('Should subscribe to non-empty currentTopic when subscribe button is clicked',()=>{
     // Arrange
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-    spyOn(component, 'subscribeToAllTopics').and.callThrough();
+    component.currentTopic = 'Test-topic';
+    spyOn(component, 'subscribeToCurrentTopic').and.callThrough();
 
     // Act 
     button.click()
 
     // Assert
-    expect(component.subscribeToAllTopics).toHaveBeenCalled();
-    expect(messagingServiceSpy.connect).toHaveBeenCalled();
+    expect(component.subscribeToCurrentTopic).toHaveBeenCalled();
   });
 
   it('Should push new message when subscribeToAll method is called',()=>{
@@ -196,7 +199,7 @@ describe('MessagingComponent', () => {
     const mqttObject: IMqttMessage = createIMqttMessage('test_channel','test_text');
 
     // Act
-    component.subscribeToAllTopics();
+    component.subscribeToCurrentTopic();
     topicObservable$.next(mqttObject);
 
     // Assert
@@ -205,15 +208,18 @@ describe('MessagingComponent', () => {
 
   it('Should call publish method when publish button is clicked', ()=>{
     // Arrange
-    const message: Message = {topic:'test_topic', text:'test_text'};
     const publishObservable$ = new Subject<void>();
     messagingServiceSpy.publish.and.returnValue(publishObservable$);
+    const message: Message = {topic:'test_topic', text:'test_text'};
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
     const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
-    component.currentTopic = message.topic;
+    const event = new InputEvent('input');
 
     // Act
-    input.value = message.text;
+    component.currentTopic = message.topic; // Select topic
+    component.subscribedToTopics.push(component.currentTopic); // Subscribe to topic
+    input.value = message.text; // Add text message
+    input.dispatchEvent(event);
     button.click();
 
     // Assert

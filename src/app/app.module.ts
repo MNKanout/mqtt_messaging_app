@@ -14,6 +14,7 @@ import { routes } from './routes';
 import { MessagingComponent } from './messaging/messaging.component';
 import { connection } from './mqtt.config';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { SnackBarComponent } from './snack-bar/snack-bar.component';
 
 // Styling
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,6 +26,7 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import {MatCardModule} from '@angular/material/card';
+import { MatSnackBarModule } from '@angular/material/snack-bar'
 
 
 @NgModule({
@@ -34,6 +36,7 @@ import {MatCardModule} from '@angular/material/card';
     HomeComponent,
     MessagingComponent,
     NotFoundComponent,
+    SnackBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -50,6 +53,7 @@ import {MatCardModule} from '@angular/material/card';
     MatButtonModule,
     FlexLayoutModule,
     MatCardModule,
+    MatSnackBarModule,
     
 
   ],

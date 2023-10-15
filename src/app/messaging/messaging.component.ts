@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
 import { Message } from '../message.interface';
 import { Subject, takeUntil } from 'rxjs';
+import { SnackBarComponent } from '../snack-bar/snack-bar.component';
 
 @Component({
   selector: 'app-messaging',
@@ -11,14 +12,17 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./messaging.component.css']
 })
 export class MessagingComponent implements OnInit, OnDestroy {
+  @ViewChild(SnackBarComponent) snackBarCompontent!: SnackBarComponent;
 
   username: string | null = '';
   messages: Message[] = [];
-  currentTopic: string = 'channel_1';
+  currentTopic: string = '';
   newTopic: string = '';
   topics: string[] = [];
   destroyed$ = new Subject<void>();
   connectedStatus: string = '';
+  subscribedToTopics: string[] = [];
+  textMessage: string = '';
 
   
   constructor(private route: ActivatedRoute,
@@ -27,6 +31,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.messagingService.connect();
+    
     // Getting data from active route
     const routeParms = this.route.snapshot.paramMap;
     this.username = routeParms.get(usernameRoutingVariable);
@@ -56,28 +62,76 @@ export class MessagingComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.complete();
 
-    this.disconnect();
-  }
-
-  onSubscribe(){
-    this.messagingService.connect();
-    this.subscribeToAllTopics();
-  }
-
-  disconnect(){
     this.messagingService.disconnect();
   }
 
+  onSubscribe(){
+    if (!this.currentTopic) {
+      this.snackBarCompontent.notfiyWarrning('Please select a topic!');
+      return;
+    } 
+
+    if (this.subscribedToTopics.includes(this.currentTopic)){
+      this.snackBarCompontent.notfiyWarrning('Already subscribed to "' + this.currentTopic + '"')
+      return;
+    }
+
+    this.subscribeToCurrentTopic();
+    this.subscribedToTopics.push(this.currentTopic);
+    this.snackBarCompontent.notfiySuccess('Subscribed to "' + this.currentTopic + '"');
+    }
+
   onNewTopic(){
+    // Empty topic
+    if (!this.newTopic) {
+      this.snackBarCompontent.notfiyWarrning("Can't add an empty topic");
+      return;
+    }
+
+    // Already added topic
+    if (this.topics.includes(this.newTopic)){
+      this.snackBarCompontent.notfiyWarrning('"'+this.newTopic +'"'+ ' is already added!');
+      return;
+    }
+      
+    
     this.topics.push(this.newTopic);
-    this.newTopic = '';
-    console.log(this.topics)
+    if (this.topics.includes(this.newTopic)){
+      this.snackBarCompontent.notfiySuccess('Added "'+ this.newTopic + '" successfully');
+      this.newTopic = '';
+    } else {
+      this.snackBarCompontent.notfiyDanger('Was unable to add ' + this.newTopic);
+    }
   }
 
-  publish(message_text: string){
+  onPublish(){
+    // Empty text message
+    if(!this.textMessage){
+      this.snackBarCompontent.notfiyWarrning('Please enter a message!');
+      return;
+    }
+
+    // Not subscribed to any topic
+    if (this.subscribedToTopics.length === 0){
+      this.snackBarCompontent.notfiyWarrning('Not subscribed to any topic yet!');
+      return;
+    }
+
+    // Not subscribed to selected topic
+    if (!this.subscribedToTopics.includes(this.currentTopic)){
+      this.snackBarCompontent.notfiyWarrning('Not subscribed to "' + this.currentTopic + '" yet!');
+      return;
+    }
+    
+    this.publish();
+    this.snackBarCompontent.notfiySuccess('Message published!');
+    this.textMessage = '';
+  }
+
+  publish(){
     const message: Message = {
       topic: this.currentTopic,
-      text: message_text,
+      text: this.textMessage,
     }
     // Observable for sending messages
     const observable$ = this.messagingService.publish(message);
@@ -87,8 +141,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  subscribeToAllTopics(){
-    // Observable for recieving messages
+  subscribeToCurrentTopic(){
+    // Observable for receiving messages
     const observable$ = this.messagingService.subscribe(this.currentTopic);
     observable$
     .pipe(
