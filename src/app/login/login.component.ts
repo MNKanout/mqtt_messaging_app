@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { SnackBarComponent } from '../snack-bar/snack-bar.component';
 
 @Component({
   selector: 'app-login',
@@ -7,6 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
+  @ViewChild(SnackBarComponent) snackBarComponent!: SnackBarComponent;
 
   username: string = '';
 
@@ -14,10 +16,10 @@ export class LoginComponent {
   }
 
   onClick(){
-    if (this.username.trim() !== '') {
+    if (!this.username) {
+      this.snackBarComponent.notfiyWarrning("Please enter a username!")
+      return;
+    }
     this.router.navigate(['/messaging', this.username]);
-  } else {
-    alert('Invalid username!')
-  }
   }
 }
