@@ -8,11 +8,14 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import {HarnessLoader} from '@angular/cdk/testing';
+import {MatSnackBarHarness} from '@angular/material/snack-bar/testing';
 
 // Local
 import { LoginComponent } from './login.component';
 import { routes } from '../routes';
 import { SnackBarComponent } from '../snack-bar/snack-bar.component';
+import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
 
 
 
@@ -20,7 +23,7 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
   let router: Router;
-
+  let loader: HarnessLoader;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -40,6 +43,8 @@ describe('LoginComponent', () => {
     router = TestBed.inject(Router);
     router.initialNavigation();
     fixture.detectChanges();
+
+    loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
   });
 
   it('should create', () => {
@@ -80,14 +85,13 @@ describe('LoginComponent', () => {
       expect(currentRoute).toBe('/messaging/dummyName');
     }));
 
-    it('Should alert when login button clicked without a supplied name',() => {
-      spyOn(window,'alert');
+    it('Should alert when login button clicked without a supplied name', async() => {
       const button: HTMLButtonElement = fixture.debugElement.
         query(By.css('button')).nativeElement;
 
-      button.click();
-
-      expect(window.alert).toHaveBeenCalled();
+      await button.click();
+      let snackBar = await loader.getHarness(MatSnackBarHarness)
+      expect(await snackBar.getMessage()).toBe('Please enter a username!')
     });
 
     it('Should have only one login card', ()=> {
