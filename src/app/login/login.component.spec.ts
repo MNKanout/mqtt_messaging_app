@@ -7,10 +7,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 // Local
 import { LoginComponent } from './login.component';
 import { routes } from '../routes';
+import { SnackBarComponent } from '../snack-bar/snack-bar.component';
 
 
 
@@ -22,7 +24,7 @@ describe('LoginComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoginComponent],
+      declarations: [LoginComponent, SnackBarComponent],
       imports: [
         RouterTestingModule.withRoutes(routes),
         MatCardModule,
@@ -31,6 +33,7 @@ describe('LoginComponent', () => {
         BrowserAnimationsModule,
         FormsModule,
       ],
+      providers:[MatSnackBar]
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;
