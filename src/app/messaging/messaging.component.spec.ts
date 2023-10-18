@@ -275,6 +275,22 @@ describe('MessagingComponent', () => {
     expect(await snackBar.getMessage()).toEqual('Please enter a message!');
   });
 
+  it('Should notify when publishing a message without subscribing to any message', async ()=>{
+    // Arrange
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
+
+    // Act
+    input.value = 'test_message';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toEqual('Not subscribed to any topic yet!');
+  });
+
   it('Should push new message when subscribeToAll method is called',()=>{
     // Arrange
     const topicObservable$ = new Subject<IMqttMessage>();
