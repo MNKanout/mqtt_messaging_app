@@ -240,7 +240,7 @@ describe('MessagingComponent', () => {
     const snackBar = await loader.getHarness(MatSnackBarHarness);
 
     // Assert
-    expect(await snackBar.getMessage()).toBe('Already subscribed to "' + component.currentTopic + '"');
+    expect(await snackBar.getMessage()).toBe('Already subscribed to "' + component.selectedTopic + '"');
   });
 
   it('Should subscribe to non-empty topic when subscribe button is clicked', async ()=>{
@@ -260,7 +260,7 @@ describe('MessagingComponent', () => {
     // Assert
     expect(messagingServiceSpy.subscribe).toHaveBeenCalled();
     expect(component.subscribedToTopics).toContain('test_topic');
-    expect(await snackBar.getMessage()).toBe('Subscribed to "' + component.currentTopic + '"');
+    expect(await snackBar.getMessage()).toBe('Subscribed to "' + component.selectedTopic + '"');
   });
 
   it('Should push new message when subscribeToAll method is called',()=>{
@@ -270,7 +270,7 @@ describe('MessagingComponent', () => {
     const mqttObject: IMqttMessage = createIMqttMessage('test_channel','test_text');
 
     // Act
-    component.subscribeToCurrentTopic();
+    component.subscribeToTopic();
     topicObservable$.next(mqttObject);
 
     // Assert
@@ -287,8 +287,8 @@ describe('MessagingComponent', () => {
     const event = new InputEvent('input');
 
     // Act
-    component.currentTopic = message.topic; // Select topic
-    component.subscribedToTopics.push(component.currentTopic); // Subscribe to topic
+    component.selectedTopic = message.topic; // Select topic
+    component.subscribedToTopics.push(component.selectedTopic); // Subscribe to topic
     input.value = message.text; // Add text message
     input.dispatchEvent(event);
     button.click();
