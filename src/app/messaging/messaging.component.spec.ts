@@ -17,6 +17,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
+import {MatSelectHarness} from '@angular/material/select/testing';
 
 // local
 import { MessagingComponent } from './messaging.component';
@@ -194,6 +195,24 @@ describe('MessagingComponent', () => {
 
     // Assert
     expect(await snackBar.getMessage()).toBe('Please select a topic!');
+  });
+
+  it('Should notify when topic is already subscribed to and subscribe button is clicked', async ()=>{
+    // Arrange
+    component.topics = ['test_topic'];
+    component.subscribedToTopics = ['test_topic'];
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
+    const select = await loader.getHarness(MatSelectHarness);
+
+    // Act 
+    await select.open();
+    const options = await select.getOptions();
+    await options[0].click();
+    await button.click()
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toBe('Already subscribed to "' + component.currentTopic + '"');
   });
 
   it('Should subscribe to non-empty currentTopic when subscribe button is clicked',()=>{
