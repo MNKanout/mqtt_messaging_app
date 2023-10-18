@@ -142,6 +142,18 @@ describe('MessagingComponent', () => {
     expect(component.newTopic).toBe('test_channel');
   });
 
+  it ('Should notify when adding an new empty topic', async()=> {
+    // Arrange 
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css("#add-topic-button")).nativeElement;
+
+    // Act
+    await button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toContain("Can't add an empty topic");
+  });
+
   it ('Should add newTopic to topics when add-topic-button is clicked', ()=> {
     // Arrange 
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
