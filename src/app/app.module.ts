@@ -14,7 +14,7 @@ import { routes } from './routes';
 import { MessagingComponent } from './messaging/messaging.component';
 import { connection } from './mqtt.config';
 import { NotFoundComponent } from './not-found/not-found.component';
-import { SnackBarComponent } from './snack-bar/snack-bar.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 
 // Styling
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -36,7 +36,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar'
     HomeComponent,
     MessagingComponent,
     NotFoundComponent,
-    SnackBarComponent,
+    NotificationsComponent,
   ],
   imports: [
     BrowserModule,

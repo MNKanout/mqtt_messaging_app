@@ -14,9 +14,8 @@ import {MatSnackBarHarness} from '@angular/material/snack-bar/testing';
 // Local
 import { LoginComponent } from './login.component';
 import { routes } from '../routes';
-import { SnackBarComponent } from '../snack-bar/snack-bar.component';
+import { NotificationsComponent } from '../notifications/notifications.component';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
-
 
 
 describe('LoginComponent', () => {
@@ -27,7 +26,7 @@ describe('LoginComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [LoginComponent, SnackBarComponent],
+      declarations: [LoginComponent, NotificationsComponent],
       imports: [
         RouterTestingModule.withRoutes(routes),
         MatCardModule,

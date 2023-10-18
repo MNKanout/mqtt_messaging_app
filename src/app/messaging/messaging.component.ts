@@ -4,7 +4,7 @@ import { usernameRoutingVariable } from '../routes';
 import { MessagingService } from '../messaging.service';
 import { Message } from '../message.interface';
 import { Subject, takeUntil } from 'rxjs';
-import { SnackBarComponent } from '../snack-bar/snack-bar.component';
+import { NotificationsComponent } from '../notifications/notifications.component';
 
 @Component({
   selector: 'app-messaging',
@@ -12,7 +12,7 @@ import { SnackBarComponent } from '../snack-bar/snack-bar.component';
   styleUrls: ['./messaging.component.css']
 })
 export class MessagingComponent implements OnInit, OnDestroy {
-  @ViewChild(SnackBarComponent) snackBarCompontent!: SnackBarComponent;
+  @ViewChild(NotificationsComponent) notificationsComponent!: NotificationsComponent;
 
   username: string | null = '';
   messages: Message[] = [];
@@ -67,64 +67,64 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   onSubscribe(){
     if (!this.currentTopic) {
-      this.snackBarCompontent.notfiyWarrning('Please select a topic!');
+      this.notificationsComponent.notifyWarning('Please select a topic!');
       return;
     } 
 
     if (this.subscribedToTopics.includes(this.currentTopic)){
-      this.snackBarCompontent.notfiyWarrning('Already subscribed to "' + this.currentTopic + '"')
+      this.notificationsComponent.notifyWarning('Already subscribed to "' + this.currentTopic + '"')
       return;
     }
 
     this.subscribeToCurrentTopic();
     this.subscribedToTopics.push(this.currentTopic);
-    this.snackBarCompontent.notfiySuccess('Subscribed to "' + this.currentTopic + '"');
+    this.notificationsComponent.notifySuccess('Subscribed to "' + this.currentTopic + '"');
     }
 
   onNewTopic(){
     // Empty topic
     if (!this.newTopic) {
-      this.snackBarCompontent.notfiyWarrning("Can't add an empty topic");
+      this.notificationsComponent.notifyWarning("Can't add an empty topic");
       return;
     }
 
     // Already added topic
     if (this.topics.includes(this.newTopic)){
-      this.snackBarCompontent.notfiyWarrning('"'+this.newTopic +'"'+ ' is already added!');
+      this.notificationsComponent.notifyWarning('"'+this.newTopic +'"'+ ' is already added!');
       return;
     }
       
     
     this.topics.push(this.newTopic);
     if (this.topics.includes(this.newTopic)){
-      this.snackBarCompontent.notfiySuccess('Added "'+ this.newTopic + '" successfully');
+      this.notificationsComponent.notifySuccess('Added "'+ this.newTopic + '" successfully');
       this.newTopic = '';
     } else {
-      this.snackBarCompontent.notfiyDanger('Was unable to add ' + this.newTopic);
+      this.notificationsComponent.notifyDanger('Was unable to add ' + this.newTopic);
     }
   }
 
   onPublish(){
     // Empty text message
     if(!this.textMessage){
-      this.snackBarCompontent.notfiyWarrning('Please enter a message!');
+      this.notificationsComponent.notifyWarning('Please enter a message!');
       return;
     }
 
     // Not subscribed to any topic
     if (this.subscribedToTopics.length === 0){
-      this.snackBarCompontent.notfiyWarrning('Not subscribed to any topic yet!');
+      this.notificationsComponent.notifyWarning('Not subscribed to any topic yet!');
       return;
     }
 
     // Not subscribed to selected topic
     if (!this.subscribedToTopics.includes(this.currentTopic)){
-      this.snackBarCompontent.notfiyWarrning('Not subscribed to "' + this.currentTopic + '" yet!');
+      this.notificationsComponent.notifyWarning('Not subscribed to "' + this.currentTopic + '" yet!');
       return;
     }
     
     this.publish();
-    this.snackBarCompontent.notfiySuccess('Message published!');
+    this.notificationsComponent.notifySuccess('Message published!');
     this.textMessage = '';
   }
 
