@@ -154,7 +154,7 @@ describe('MessagingComponent', () => {
     expect(await snackBar.getMessage()).toContain("Can't add an empty topic");
   });
 
-  it ('Should notify when adding a topic that has already been added', async()=> {
+  it('Should notify when adding a topic that has already been added', async()=> {
     // Arrange
     component.topics = ['test_topic'];
     const button: HTMLButtonElement = fixture.debugElement.query(By.css("#add-topic-button")).nativeElement;
@@ -261,6 +261,18 @@ describe('MessagingComponent', () => {
     expect(messagingServiceSpy.subscribe).toHaveBeenCalled();
     expect(component.subscribedToTopics).toContain('test_topic');
     expect(await snackBar.getMessage()).toBe('Subscribed to "' + component.selectedTopic + '"');
+  });
+
+  it('Should notify when publishing an empty message', async ()=>{
+    // Arrange
+    const button = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
+
+    // Act
+    button.click()
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toEqual('Please enter a message!');
   });
 
   it('Should push new message when subscribeToAll method is called',()=>{
