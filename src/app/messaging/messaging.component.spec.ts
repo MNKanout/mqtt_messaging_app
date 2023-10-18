@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 // Third party
 import {MatDividerModule} from '@angular/material/divider';
@@ -14,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
 
 // local
 import { MessagingComponent } from './messaging.component';
@@ -40,6 +43,7 @@ describe('MessagingComponent', () => {
   let router: Router;
   let connectionStatusSubject: Subject<boolean>;
   let messagingServiceSpy: Spy<MessagingService>;
+  let loader: HarnessLoader;
 
   beforeEach(() => {
 
@@ -73,6 +77,7 @@ describe('MessagingComponent', () => {
     // Dependency injection
     messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     router = TestBed.inject(Router);
+    loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
 
     // ngOnInit
     fixture.detectChanges();
@@ -177,6 +182,18 @@ describe('MessagingComponent', () => {
     expect(options[0].nativeElement.innerText).toEqual('test_channel_1');
     expect(options[1].nativeElement.innerText).toEqual('test_channel_2');
     expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
+  });
+
+  it('Should notify when topic is not selected and subscribe button is clicked', async ()=>{
+    // Arrange
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
+
+    // Act 
+    await button.click()
+    let snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toBe('Please select a topic!');
   });
 
   it('Should subscribe to non-empty currentTopic when subscribe button is clicked',()=>{
