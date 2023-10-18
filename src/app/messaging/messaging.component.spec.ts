@@ -154,6 +154,22 @@ describe('MessagingComponent', () => {
     expect(await snackBar.getMessage()).toContain("Can't add an empty topic");
   });
 
+  it ('Should notify when adding a topic that has already been added', async()=> {
+    // Arrange
+    component.topics = ['test_topic'];
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css("#add-topic-button")).nativeElement;
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('#topic-input')).nativeElement;
+
+    // Act
+    input.value = 'test_topic';
+    input.dispatchEvent(new Event('input'));
+    await button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toContain('"'+ component.newTopic +'"'+ ' is already added!');
+  });
+
   it ('Should add newTopic to topics when add-topic-button is clicked', ()=> {
     // Arrange 
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
