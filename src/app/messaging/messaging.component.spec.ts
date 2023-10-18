@@ -215,17 +215,24 @@ describe('MessagingComponent', () => {
     expect(await snackBar.getMessage()).toBe('Already subscribed to "' + component.currentTopic + '"');
   });
 
-  it('Should subscribe to non-empty currentTopic when subscribe button is clicked',()=>{
+  it('Should subscribe to non-empty topic when subscribe button is clicked', async ()=>{
     // Arrange
+    component.topics = ['test_topic'];
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-    component.currentTopic = 'Test-topic';
-    spyOn(component, 'subscribeToCurrentTopic').and.callThrough();
+    const select = await loader.getHarness(MatSelectHarness);
+    fixture.detectChanges();
 
-    // Act 
-    button.click()
+    // Act
+    await select.open();
+    const options = await select.getOptions();
+    await options[0].click();
+    await button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
 
     // Assert
-    expect(component.subscribeToCurrentTopic).toHaveBeenCalled();
+    expect(messagingServiceSpy.subscribe).toHaveBeenCalled();
+    expect(component.subscribedToTopics).toContain('test_topic');
+    expect(await snackBar.getMessage()).toBe('Subscribed to "' + component.currentTopic + '"');
   });
 
   it('Should push new message when subscribeToAll method is called',()=>{

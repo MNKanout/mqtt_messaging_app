@@ -75,10 +75,9 @@ export class MessagingComponent implements OnInit, OnDestroy {
       this.notificationsComponent.notifyWarning('Already subscribed to "' + this.currentTopic + '"')
       return;
     }
-
-    this.subscribeToCurrentTopic();
-    this.subscribedToTopics.push(this.currentTopic);
     this.notificationsComponent.notifySuccess('Subscribed to "' + this.currentTopic + '"');
+    this.subscribedToTopics.push(this.currentTopic); 
+    this.subscribeToCurrentTopic();
     }
 
   onNewTopic(){
