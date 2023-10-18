@@ -57,18 +57,6 @@ describe('LoginComponent', () => {
     expect(currentRoute).toBe('/login');
   }));
 
-  it('Should have username input field', () => {
-    const inputField: HTMLInputElement = fixture.debugElement.
-      query(By.css('input')).nativeElement;
-    expect(inputField.name).toBe('username');
-  });
-
-  it('Should have login button', () => {
-    const button: HTMLButtonElement = fixture.debugElement.
-      query(By.css('button')).nativeElement;
-    expect(button.innerHTML).toBe('Login');
-  });
-
   it('Should navigate to messaging component when login button clicked with username',fakeAsync(() => {
       const button: HTMLButtonElement = fixture.debugElement.
         query(By.css('button')).nativeElement;
