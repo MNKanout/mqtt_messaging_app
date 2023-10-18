@@ -21,7 +21,7 @@ import { MessagingService } from '../messaging.service';
 import { routes, usernameRoutingVariable } from '../routes';
 import { Message } from '../message.interface';
 import { IMqttMessage } from 'ngx-mqtt';
-import { SnackBarComponent } from '../snack-bar/snack-bar.component';
+import { NotificationsComponent } from '../notifications/notifications.component';
 
 function createIMqttMessage(topic:string, text:string): IMqttMessage {
   return {
@@ -48,7 +48,7 @@ describe('MessagingComponent', () => {
     messagingServiceSpy = createSpyFromClass(MessagingService);
 
     TestBed.configureTestingModule({
-      declarations: [MessagingComponent, SnackBarComponent],
+      declarations: [MessagingComponent, NotificationsComponent],
       providers: [
         {provide: MessagingService, useValue: messagingServiceSpy},
       ],

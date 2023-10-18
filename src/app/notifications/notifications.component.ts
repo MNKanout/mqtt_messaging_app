@@ -8,12 +8,12 @@ import {
  from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-snack-bar',
-  templateUrl: './snack-bar.component.html',
-  styleUrls: ['./snack-bar.component.css']
+  selector: 'app-notifications',
+  templateUrl: './notifications.component.html',
+  styleUrls: ['./notifications.component.css']
 })
 
-export class SnackBarComponent {
+export class NotificationsComponent {
   // snackBar config
   verticalPosition: MatSnackBarVerticalPosition =  'top';
   horizontalPosition: MatSnackBarHorizontalPosition =  'center';
@@ -22,7 +22,7 @@ export class SnackBarComponent {
 
   constructor(private _snackBar: MatSnackBar){}
 
-  notfiySuccess(message: string){
+  notifySuccess(message: string){
     this._snackBar.open(message, undefined, 
     {
       panelClass: 'snack-bar-success',
@@ -33,7 +33,7 @@ export class SnackBarComponent {
     }
   )};
 
-  notfiyWarrning(message: string){
+  notifyWarning(message: string){
     this._snackBar.open(message, undefined, 
     {
       panelClass: 'snack-bar-warning',
@@ -44,7 +44,7 @@ export class SnackBarComponent {
     }
   )};
 
-  notfiyDanger(message: string){
+  notifyDanger(message: string){
     this._snackBar.open(message, undefined, 
     {
       panelClass: 'snack-bar-danger',
