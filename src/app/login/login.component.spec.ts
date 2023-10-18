@@ -83,6 +83,24 @@ describe('LoginComponent', () => {
       expect(await snackBar.getMessage()).toBe('Please enter a username!')
     });
 
+    it('Should notify when login button clicked and username includes special char', async() => {
+      // Arrange
+      const button: HTMLButtonElement = fixture.debugElement.
+        query(By.css('button')).nativeElement;
+      const input: HTMLInputElement = fixture.debugElement.
+        query(By.css('input')).nativeElement;
+
+      // Act
+      input.value = 'Test-username';
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      await button.click();
+      let snackBar = await loader.getHarness(MatSnackBarHarness)
+
+      // Assert
+      expect(await snackBar.getMessage()).toBe('Invalid Username')
+    });
+
     it('Should have only one login card', ()=> {
       const cards: MatCardModule[] = fixture.debugElement.
       queryAll(By.css('mat-card'));
