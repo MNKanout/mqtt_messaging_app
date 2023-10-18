@@ -69,14 +69,16 @@ describe('LoginComponent', () => {
     expect(button.innerHTML).toBe('Login');
   });
 
-  it('Should navigate to messaging component when login button clicked with a name supplied',
-    fakeAsync(() => {
+  it('Should navigate to messaging component when login button clicked with username',fakeAsync(() => {
       const button: HTMLButtonElement = fixture.debugElement.
         query(By.css('button')).nativeElement;
       const input: HTMLInputElement = fixture.debugElement.
         query(By.css('input')).nativeElement;
 
-      component.username = 'dummyName';
+      // debugger;
+      input.value = 'dummyName';
+      input.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
       button.click();
       tick();
 
@@ -84,7 +86,7 @@ describe('LoginComponent', () => {
       expect(currentRoute).toBe('/messaging/dummyName');
     }));
 
-    it('Should alert when login button clicked without a supplied name', async() => {
+    it('Should notify when login button clicked without a supplied name', async() => {
       const button: HTMLButtonElement = fixture.debugElement.
         query(By.css('button')).nativeElement;
 
