@@ -16,7 +16,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   username: string | null = '';
   messages: Message[] = [];
-  currentTopic: string = '';
+  selectedTopic: string = '';
   newTopic: string = '';
   topics: string[] = [];
   destroyed$ = new Subject<void>();
@@ -66,19 +66,18 @@ export class MessagingComponent implements OnInit, OnDestroy {
   }
 
   onSubscribe(){
-    if (!this.currentTopic) {
+    if (!this.selectedTopic) {
       this.notificationsComponent.notifyWarning('Please select a topic!');
       return;
     } 
 
-    if (this.subscribedToTopics.includes(this.currentTopic)){
-      this.notificationsComponent.notifyWarning('Already subscribed to "' + this.currentTopic + '"')
+    if (this.subscribedToTopics.includes(this.selectedTopic)){
+      this.notificationsComponent.notifyWarning('Already subscribed to "' + this.selectedTopic + '"')
       return;
     }
-
-    this.subscribeToCurrentTopic();
-    this.subscribedToTopics.push(this.currentTopic);
-    this.notificationsComponent.notifySuccess('Subscribed to "' + this.currentTopic + '"');
+    this.notificationsComponent.notifySuccess('Subscribed to "' + this.selectedTopic + '"');
+    this.subscribedToTopics.push(this.selectedTopic); 
+    this.subscribeToTopic();
     }
 
   onNewTopic(){
@@ -93,15 +92,11 @@ export class MessagingComponent implements OnInit, OnDestroy {
       this.notificationsComponent.notifyWarning('"'+this.newTopic +'"'+ ' is already added!');
       return;
     }
-      
     
+    // Add topic
     this.topics.push(this.newTopic);
-    if (this.topics.includes(this.newTopic)){
-      this.notificationsComponent.notifySuccess('Added "'+ this.newTopic + '" successfully');
-      this.newTopic = '';
-    } else {
-      this.notificationsComponent.notifyDanger('Was unable to add ' + this.newTopic);
-    }
+    this.notificationsComponent.notifySuccess('Added "'+ this.newTopic + '" successfully');
+    this.newTopic = '';
   }
 
   onPublish(){
@@ -118,8 +113,8 @@ export class MessagingComponent implements OnInit, OnDestroy {
     }
 
     // Not subscribed to selected topic
-    if (!this.subscribedToTopics.includes(this.currentTopic)){
-      this.notificationsComponent.notifyWarning('Not subscribed to "' + this.currentTopic + '" yet!');
+    if (!this.subscribedToTopics.includes(this.selectedTopic)){
+      this.notificationsComponent.notifyWarning('Not subscribed to "' + this.selectedTopic + '" yet!');
       return;
     }
     
@@ -130,7 +125,7 @@ export class MessagingComponent implements OnInit, OnDestroy {
 
   publish(){
     const message: Message = {
-      topic: this.currentTopic,
+      topic: this.selectedTopic,
       text: this.textMessage,
     }
     // Observable for sending messages
@@ -141,9 +136,9 @@ export class MessagingComponent implements OnInit, OnDestroy {
     ).subscribe();
   }
 
-  subscribeToCurrentTopic(){
+  subscribeToTopic(){
     // Observable for receiving messages
-    const observable$ = this.messagingService.subscribe(this.currentTopic);
+    const observable$ = this.messagingService.subscribe(this.selectedTopic);
     observable$
     .pipe(
       takeUntil(this.destroyed$)

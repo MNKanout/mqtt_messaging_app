@@ -28,7 +28,7 @@
         <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10">
             <mat-form-field>
                 <mat-label>Select topic</mat-label>
-                <mat-select [(value)]="currentTopic">
+                <mat-select [(value)]="selectedTopic">
                 <mat-option value={{topic}} *ngFor='let topic of topics'>
                     {{topic}}</mat-option>
                 </mat-select>

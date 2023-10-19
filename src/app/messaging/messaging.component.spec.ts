@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
+import { HarnessLoader } from '@angular/cdk/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 
 // Third party
 import {MatDividerModule} from '@angular/material/divider';
@@ -14,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarHarness } from '@angular/material/snack-bar/testing';
+import {MatSelectHarness} from '@angular/material/select/testing';
 
 // local
 import { MessagingComponent } from './messaging.component';
@@ -40,6 +44,7 @@ describe('MessagingComponent', () => {
   let router: Router;
   let connectionStatusSubject: Subject<boolean>;
   let messagingServiceSpy: Spy<MessagingService>;
+  let loader: HarnessLoader;
 
   beforeEach(() => {
 
@@ -73,6 +78,7 @@ describe('MessagingComponent', () => {
     // Dependency injection
     messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     router = TestBed.inject(Router);
+    loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
 
     // ngOnInit
     fixture.detectChanges();
@@ -136,6 +142,34 @@ describe('MessagingComponent', () => {
     expect(component.newTopic).toBe('test_channel');
   });
 
+  it ('Should notify when adding an new empty topic', async()=> {
+    // Arrange 
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css("#add-topic-button")).nativeElement;
+
+    // Act
+    await button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toContain("Can't add an empty topic");
+  });
+
+  it('Should notify when adding a topic that has already been added', async()=> {
+    // Arrange
+    component.topics = ['test_topic'];
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css("#add-topic-button")).nativeElement;
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('#topic-input')).nativeElement;
+
+    // Act
+    input.value = 'test_topic';
+    input.dispatchEvent(new Event('input'));
+    await button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toContain('"'+ component.newTopic +'"'+ ' is already added!');
+  });
+
   it ('Should add newTopic to topics when add-topic-button is clicked', ()=> {
     // Arrange 
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
@@ -179,17 +213,105 @@ describe('MessagingComponent', () => {
     expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
   });
 
-  it('Should subscribe to non-empty currentTopic when subscribe button is clicked',()=>{
+  it('Should notify when topic is not selected and subscribe button is clicked', async ()=>{
     // Arrange
     const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-    component.currentTopic = 'Test-topic';
-    spyOn(component, 'subscribeToCurrentTopic').and.callThrough();
 
     // Act 
-    button.click()
+    await button.click()
+    let snackBar = await loader.getHarness(MatSnackBarHarness);
 
     // Assert
-    expect(component.subscribeToCurrentTopic).toHaveBeenCalled();
+    expect(await snackBar.getMessage()).toBe('Please select a topic!');
+  });
+
+  it('Should notify when topic is already subscribed to and subscribe button is clicked', async ()=>{
+    // Arrange
+    component.topics = ['test_topic'];
+    component.subscribedToTopics = ['test_topic'];
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
+    const select = await loader.getHarness(MatSelectHarness);
+
+    // Act 
+    await select.open();
+    const options = await select.getOptions();
+    await options[0].click();
+    await button.click()
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toBe('Already subscribed to "' + component.selectedTopic + '"');
+  });
+
+  it('Should subscribe to non-empty topic when subscribe button is clicked', async ()=>{
+    // Arrange
+    component.topics = ['test_topic'];
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
+    const select = await loader.getHarness(MatSelectHarness);
+    fixture.detectChanges();
+
+    // Act
+    await select.open();
+    const options = await select.getOptions();
+    await options[0].click();
+    await button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(messagingServiceSpy.subscribe).toHaveBeenCalled();
+    expect(component.subscribedToTopics).toContain('test_topic');
+    expect(await snackBar.getMessage()).toBe('Subscribed to "' + component.selectedTopic + '"');
+  });
+
+  it('Should notify when publishing an empty message', async ()=>{
+    // Arrange
+    const button = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
+
+    // Act
+    button.click()
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toEqual('Please enter a message!');
+  });
+
+  it('Should notify when publishing a message without subscribing to any message', async ()=>{
+    // Arrange
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
+
+    // Act
+    input.value = 'test_message';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toEqual('Not subscribed to any topic yet!');
+  });
+
+  it('Should notify when publishing to a topic that is not subscribed to', async ()=>{
+    // Arrange
+    component.topics = ['test_topic_1'];
+    component.subscribedToTopics = ['test_topic_2'];
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
+    const select: MatSelectHarness = await loader.getHarness(MatSelectHarness);
+
+    // Act
+    await select.open();
+    const options = await select.getOptions();
+    await options[0].click();
+    fixture.detectChanges();
+    input.value = 'test_message';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toEqual('Not subscribed to "' + component.selectedTopic + '" yet!');
   });
 
   it('Should push new message when subscribeToAll method is called',()=>{
@@ -199,7 +321,7 @@ describe('MessagingComponent', () => {
     const mqttObject: IMqttMessage = createIMqttMessage('test_channel','test_text');
 
     // Act
-    component.subscribeToCurrentTopic();
+    component.subscribeToTopic();
     topicObservable$.next(mqttObject);
 
     // Assert
@@ -216,8 +338,8 @@ describe('MessagingComponent', () => {
     const event = new InputEvent('input');
 
     // Act
-    component.currentTopic = message.topic; // Select topic
-    component.subscribedToTopics.push(component.currentTopic); // Subscribe to topic
+    component.selectedTopic = message.topic; // Select topic
+    component.subscribedToTopics.push(component.selectedTopic); // Subscribe to topic
     input.value = message.text; // Add text message
     input.dispatchEvent(event);
     button.click();
