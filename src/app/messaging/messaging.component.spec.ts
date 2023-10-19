@@ -291,6 +291,29 @@ describe('MessagingComponent', () => {
     expect(await snackBar.getMessage()).toEqual('Not subscribed to any topic yet!');
   });
 
+  it('Should notify when publishing to a topic that is not subscribed to', async ()=>{
+    // Arrange
+    component.topics = ['test_topic_1'];
+    component.subscribedToTopics = ['test_topic_2'];
+    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#publish-button')).nativeElement;
+    const input: HTMLInputElement = fixture.debugElement.query(By.css('#message-text')).nativeElement;
+    const select: MatSelectHarness = await loader.getHarness(MatSelectHarness);
+
+    // Act
+    await select.open();
+    const options = await select.getOptions();
+    await options[0].click();
+    fixture.detectChanges();
+    input.value = 'test_message';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    button.click();
+    const snackBar = await loader.getHarness(MatSnackBarHarness);
+
+    // Assert
+    expect(await snackBar.getMessage()).toEqual('Not subscribed to "' + component.selectedTopic + '" yet!');
+  });
+
   it('Should push new message when subscribeToAll method is called',()=>{
     // Arrange
     const topicObservable$ = new Subject<IMqttMessage>();
