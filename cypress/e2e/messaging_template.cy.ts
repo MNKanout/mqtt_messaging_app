@@ -59,7 +59,6 @@ describe('messaging template spec', () => {
     .should('include','Please select a topic!');
   });
 
-
   it('Should notify when subscribed to selected topic', ()=>{
     // Arrange
     const topic: string = 'testCha1';
@@ -76,5 +75,24 @@ describe('messaging template spec', () => {
     .find('.mat-mdc-snack-bar-label')
     .invoke('text')
     .should('include', 'Subscribed to "' + topic + '"');
+  });
+
+  it('Should notify when subscribing to an already subscribed to topic', ()=>{
+    // Arrange
+    const topic: string = 'testCha1';
+    cy.get('#topic-input').type(topic);
+    cy.get('#add-topic-button').click();
+
+    // Act
+    cy.get('mat-select').click();
+    cy.get('mat-option').click();
+    cy.get('#subscribe-button').click();
+    cy.get('#subscribe-button').click();
+
+    // Assert
+    cy.get('simple-snack-bar')
+    .find('.mat-mdc-snack-bar-label')
+    .invoke('text')
+    .should('include', 'Already subscribed to "' + topic + '"');
   });
 });
