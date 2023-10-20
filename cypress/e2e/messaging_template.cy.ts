@@ -119,4 +119,30 @@ describe('messaging template spec', () => {
     .invoke('text')
     .should('include', 'Not subscribed to any topic yet!');
   });
+
+  it('Should notify when publishing before subscribing to selected topic', ()=>{
+    // Arrange
+    const topic1: string = 'testCha1';
+    cy.get('#topic-input').type(topic1);
+    cy.get('#add-topic-button').click();
+    cy.get('mat-select').click();
+    cy.get('#mat-option-0').click();
+    cy.get('#subscribe-button').click();
+
+    const topic2: string = 'testCha2';
+    cy.get('#topic-input').type(topic2);
+    cy.get('#add-topic-button').click();
+    cy.get('mat-select').click();
+    cy.get('#mat-option-1').click();
+
+    // Act
+    cy.get('#message-text').type('test_text')
+    cy.get('#publish-button').click();
+
+    // Assert
+    cy.get('simple-snack-bar')
+    .find('.mat-mdc-snack-bar-label')
+    .invoke('text')
+    .should('include', 'Not subscribed to "' + topic2 + '" yet!');
+  });
 });
