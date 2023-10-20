@@ -106,4 +106,17 @@ describe('messaging template spec', () => {
     .invoke('text')
     .should('include', 'Please enter a message!');
   });
+
+  it('Should notify when publishing before subscribing to any topic', ()=>{
+
+    // Act
+    cy.get('#message-text').type('test_text')
+    cy.get('#publish-button').click();
+
+    // Assert
+    cy.get('simple-snack-bar')
+    .find('.mat-mdc-snack-bar-label')
+    .invoke('text')
+    .should('include', 'Not subscribed to any topic yet!');
+  });
 });
