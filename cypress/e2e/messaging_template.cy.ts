@@ -47,6 +47,18 @@ describe('messaging template spec', () => {
     .should('include', 'Added "'+ topic + '" successfully');
   });
 
+  it('Should notify when subscribing without selecting a topic', ()=>{
+
+    // Act
+    cy.get('#subscribe-button').click();
+
+    // Assert
+    cy.get('simple-snack-bar')
+    .find('.mat-mdc-snack-bar-label')
+    .invoke('text')
+    .should('include','Please select a topic!');
+  });
+
 
   it('Should notify when subscribed to selected topic', ()=>{
     // Arrange
