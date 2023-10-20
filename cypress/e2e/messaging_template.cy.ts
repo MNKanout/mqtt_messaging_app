@@ -95,4 +95,15 @@ describe('messaging template spec', () => {
     .invoke('text')
     .should('include', 'Already subscribed to "' + topic + '"');
   });
+
+  it('Should notify when publishing an empty message', ()=>{
+    // Act
+    cy.get('#publish-button').click();
+
+    // Assert
+    cy.get('simple-snack-bar')
+    .find('.mat-mdc-snack-bar-label')
+    .invoke('text')
+    .should('include', 'Please enter a message!');
+  });
 });
