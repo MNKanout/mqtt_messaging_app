@@ -70,6 +70,10 @@ class MessagingPage {
     await select.open();
     return await select.getOptions();
   }
+
+  subscribeButton(){
+    return document.querySelector('#subscribe-button') as HTMLButtonElement;
+  }
 }
 
 describe('MessagingComponent', () => {
@@ -218,14 +222,10 @@ describe('MessagingComponent', () => {
 
   fit('Should dynamically display topics in the select element', async ()=>{
     // Arrange
-    // const trigger = fixture.debugElement.query(By.css('mat-select')).nativeElement;
     component.topics = ['test_channel_1','test_channel_2','test_channel_3']
     fixture.detectChanges();
 
     // Act
-    // trigger.click();
-    // fixture.detectChanges();
-    // const options = fixture.debugElement.queryAll(By.css('mat-option'));
     const options = await messagingPage.getTopicOptions();
 
     // Assert
@@ -234,34 +234,26 @@ describe('MessagingComponent', () => {
     expect(await options[2].getText()).toEqual('test_channel_3');
   });
 
-  it('Should notify when topic is not selected and subscribe button is clicked', async ()=>{
-    // Arrange
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-
+  fit('Should notify when topic is not selected and subscribe button is clicked', async ()=>{
     // Act 
-    await button.click()
-    let snackBar = await loader.getHarness(MatSnackBarHarness);
+    messagingPage.subscribeButton().click()
 
     // Assert
-    expect(await snackBar.getMessage()).toBe('Please select a topic!');
+    expect(await messagingPage.getNotification()).toBe('Please select a topic!');
   });
 
-  it('Should notify when topic is already subscribed to and subscribe button is clicked', async ()=>{
+  fit('Should notify when topic is already subscribed to and subscribe button is clicked', async ()=>{
     // Arrange
     component.topics = ['test_topic'];
     component.subscribedToTopics = ['test_topic'];
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-    const select = await loader.getHarness(MatSelectHarness);
+    const options = await messagingPage.getTopicOptions();
 
     // Act 
-    await select.open();
-    const options = await select.getOptions();
     await options[0].click();
-    await button.click()
-    const snackBar = await loader.getHarness(MatSnackBarHarness);
+    messagingPage.subscribeButton().click()
 
     // Assert
-    expect(await snackBar.getMessage()).toBe('Already subscribed to "' + component.selectedTopic + '"');
+    expect(await messagingPage.getNotification()).toBe('Already subscribed to "' + component.selectedTopic + '"');
   });
 
   it('Should subscribe to non-empty topic when subscribe button is clicked', async ()=>{
