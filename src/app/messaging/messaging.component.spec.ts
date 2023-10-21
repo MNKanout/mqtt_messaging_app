@@ -64,6 +64,12 @@ class MessagingPage {
     const snackBar = await this.loader.getHarness(MatSnackBarHarness);
     return await snackBar.getMessage();
   }
+
+  async getTopicOptions(){
+    const select = await this.loader.getHarness(MatSelectHarness);
+    await select.open();
+    return await select.getOptions();
+  }
 }
 
 describe('MessagingComponent', () => {
@@ -210,21 +216,22 @@ describe('MessagingComponent', () => {
     expect(component.newTopic).toBe("");
   });
 
-  it('Should dynamically display topics in the select element', ()=>{
+  fit('Should dynamically display topics in the select element', async ()=>{
     // Arrange
-    const trigger = fixture.debugElement.query(By.css('mat-select')).nativeElement;
+    // const trigger = fixture.debugElement.query(By.css('mat-select')).nativeElement;
     component.topics = ['test_channel_1','test_channel_2','test_channel_3']
     fixture.detectChanges();
 
     // Act
-    trigger.click();
-    fixture.detectChanges();
-    const options = fixture.debugElement.queryAll(By.css('mat-option'));
+    // trigger.click();
+    // fixture.detectChanges();
+    // const options = fixture.debugElement.queryAll(By.css('mat-option'));
+    const options = await messagingPage.getTopicOptions();
 
     // Assert
-    expect(options[0].nativeElement.innerText).toEqual('test_channel_1');
-    expect(options[1].nativeElement.innerText).toEqual('test_channel_2');
-    expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
+    expect(await options[0].getText()).toEqual('test_channel_1');
+    expect(await options[1].getText()).toEqual('test_channel_2');
+    expect(await options[2].getText()).toEqual('test_channel_3');
   });
 
   it('Should notify when topic is not selected and subscribe button is clicked', async ()=>{
