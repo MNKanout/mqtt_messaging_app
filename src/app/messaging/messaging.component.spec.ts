@@ -38,6 +38,12 @@ function createIMqttMessage(topic:string, text:string): IMqttMessage {
   };
 }
 
+class MessagingPage {
+  getConnectionHeading(){
+    return document.querySelector('#connectionStatus') as HTMLHeadingElement;
+  }
+}
+
 describe('MessagingComponent', () => {
   let component: MessagingComponent;
   let fixture: ComponentFixture<MessagingComponent>;
@@ -45,6 +51,7 @@ describe('MessagingComponent', () => {
   let connectionStatusSubject: Subject<boolean>;
   let messagingServiceSpy: Spy<MessagingService>;
   let loader: HarnessLoader;
+  let messagingPage: MessagingPage;
 
   beforeEach(() => {
 
@@ -79,6 +86,7 @@ describe('MessagingComponent', () => {
     messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     router = TestBed.inject(Router);
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+    messagingPage = new MessagingPage();
 
     // ngOnInit
     fixture.detectChanges();
@@ -105,8 +113,7 @@ describe('MessagingComponent', () => {
 
   it('Should display disconnected when connectionStatus is false', ()=>{
     // Arrange
-    const connectionHeading: HTMLHeadingElement = fixture.debugElement.
-    query(By.css('h3[id="connectionStatus"]')).nativeElement;
+    const connectionHeading = messagingPage.getConnectionHeading();
 
     // Act
     connectionStatusSubject.next(false);
@@ -118,8 +125,7 @@ describe('MessagingComponent', () => {
 
   it('Should display connected when connectionStatus is true', ()=>{
     // Arrange
-    const connectionHeading: HTMLHeadingElement = fixture.debugElement.
-    query(By.css('h3[id="connectionStatus"]')).nativeElement;
+    const connectionHeading = messagingPage.getConnectionHeading();
 
     // Act
     connectionStatusSubject.next(true);
