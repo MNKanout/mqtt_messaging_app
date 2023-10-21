@@ -41,6 +41,16 @@ function createIMqttMessage(topic:string, text:string): IMqttMessage {
 class MessagingPage {
   getConnectionHeading(){
     return document.querySelector('#connectionStatus') as HTMLHeadingElement;
+  };
+
+  getTopicInput(){
+    return document.querySelector('#topic-input') as HTMLInputElement
+  }
+
+  setTopicInput(input: string){
+   const topicInput = document.querySelector('#topic-input') as HTMLInputElement;
+   topicInput.value = input;
+   topicInput.dispatchEvent(new Event('input'));
   }
 }
 
@@ -136,12 +146,8 @@ describe('MessagingComponent', () => {
   });
 
   it('Should bound topic-input to newTopic variable', ()=> {
-    // Arrange
-    const topicInput: HTMLInputElement = fixture.debugElement.query(By.css('input[id="topic-input"]')).nativeElement;
-    
     // Act
-    topicInput.value = 'test_channel';
-    topicInput.dispatchEvent(new Event('input'));
+    messagingPage.setTopicInput('test_channel');
     fixture.detectChanges();
 
     // Assert
