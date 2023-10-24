@@ -1,3 +1,5 @@
+import { cy, describe, it } from 'local-cypress'
+
 describe('home template spec', () => {
   beforeEach(()=>{
     cy.visit('localhost:4200')

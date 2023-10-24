@@ -1,3 +1,5 @@
+import { cy, describe, it } from 'local-cypress'
+
 describe('messaging template spec', () => {
 
   beforeEach(()=>{

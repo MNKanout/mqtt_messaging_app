@@ -1,3 +1,5 @@
+import { cy, describe, it } from 'local-cypress'
+
 describe('Login template', () => {
   beforeEach(()=>{
     cy.visit('localhost:4200/login');
