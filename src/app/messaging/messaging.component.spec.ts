@@ -38,6 +38,44 @@ function createIMqttMessage(topic:string, text:string): IMqttMessage {
   };
 }
 
+class MessagingPage {
+
+  constructor(private loader: HarnessLoader){}
+  
+  getConnectionHeading(){
+    return document.querySelector('#connectionStatus') as HTMLHeadingElement;
+  };
+
+  getTopicInput(){
+    return document.querySelector('#topic-input') as HTMLInputElement
+  }
+
+  setTopicInput(input: string){
+   const topicInput = document.querySelector('#topic-input') as HTMLInputElement;
+   topicInput.value = input;
+   topicInput.dispatchEvent(new Event('input'));
+  }
+
+  AddTopicButton(){
+    return document.querySelector('#add-topic-button') as HTMLButtonElement;
+  }
+
+  async getNotification(){
+    const snackBar = await this.loader.getHarness(MatSnackBarHarness);
+    return await snackBar.getMessage();
+  }
+
+  async getTopicOptions(){
+    const select = await this.loader.getHarness(MatSelectHarness);
+    await select.open();
+    return await select.getOptions();
+  }
+
+  subscribeButton(){
+    return document.querySelector('#subscribe-button') as HTMLButtonElement;
+  }
+}
+
 describe('MessagingComponent', () => {
   let component: MessagingComponent;
   let fixture: ComponentFixture<MessagingComponent>;
@@ -45,6 +83,7 @@ describe('MessagingComponent', () => {
   let connectionStatusSubject: Subject<boolean>;
   let messagingServiceSpy: Spy<MessagingService>;
   let loader: HarnessLoader;
+  let messagingPage: MessagingPage;
 
   beforeEach(() => {
 
@@ -79,34 +118,34 @@ describe('MessagingComponent', () => {
     messagingServiceSpy.getConnectedStatus.and.returnValue(connectionStatusSubject.asObservable());
     router = TestBed.inject(Router);
     loader = TestbedHarnessEnvironment.documentRootLoader(fixture);
+    messagingPage = new MessagingPage(loader);
 
     // ngOnInit
     fixture.detectChanges();
 
   });
 
-  it('should create', () => {
+  fit('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Should navigate to /messaging/username when username is supplied',fakeAsync(()=> {
+  fit('Should navigate to /messaging/username when username is supplied',fakeAsync(()=> {
     router.navigate(['messaging', usernameRoutingVariable]);
     tick();
     const currentRoute = router.routerState.snapshot.url;
     expect(currentRoute).toBe('/messaging/username');
   }));
 
-  it('Should render 404 when username is not supplied', fakeAsync(()=>{
+  fit('Should render 404 when username is not supplied', fakeAsync(()=>{
     router.navigate(['/messaging']);
     tick();
     const currentRoute = router.routerState.snapshot.url;
     expect(currentRoute).toBe('/not-found');
   }));
 
-  it('Should display disconnected when connectionStatus is false', ()=>{
+  fit('Should display disconnected when connectionStatus is false', ()=>{
     // Arrange
-    const connectionHeading: HTMLHeadingElement = fixture.debugElement.
-    query(By.css('h3[id="connectionStatus"]')).nativeElement;
+    const connectionHeading = messagingPage.getConnectionHeading();
 
     // Act
     connectionStatusSubject.next(false);
@@ -116,10 +155,9 @@ describe('MessagingComponent', () => {
     expect(connectionHeading.innerHTML).toBe('Disconnected');
   });
 
-  it('Should display connected when connectionStatus is true', ()=>{
+  fit('Should display connected when connectionStatus is true', ()=>{
     // Arrange
-    const connectionHeading: HTMLHeadingElement = fixture.debugElement.
-    query(By.css('h3[id="connectionStatus"]')).nativeElement;
+    const connectionHeading = messagingPage.getConnectionHeading();
 
     // Act
     connectionStatusSubject.next(true);
@@ -129,118 +167,93 @@ describe('MessagingComponent', () => {
     expect(connectionHeading.innerHTML).toBe('Connected');
   });
 
-  it('Should bound topic-input to newTopic variable', ()=> {
-    // Arrange
-    const topicInput: HTMLInputElement = fixture.debugElement.query(By.css('input[id="topic-input"]')).nativeElement;
-    
+  fit('Should bound topic-input to newTopic variable', ()=> {
     // Act
-    topicInput.value = 'test_channel';
-    topicInput.dispatchEvent(new Event('input'));
+    messagingPage.setTopicInput('test_channel');
     fixture.detectChanges();
 
     // Assert
     expect(component.newTopic).toBe('test_channel');
   });
 
-  it ('Should notify when adding an new empty topic', async()=> {
-    // Arrange 
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css("#add-topic-button")).nativeElement;
-
+  fit('Should notify when adding an new empty topic', async()=> {
     // Act
-    await button.click();
-    const snackBar = await loader.getHarness(MatSnackBarHarness);
+    messagingPage.AddTopicButton().click();
 
     // Assert
-    expect(await snackBar.getMessage()).toContain("Can't add an empty topic");
+    expect(await messagingPage.getNotification()).toContain("Can't add an empty topic");
   });
 
-  it('Should notify when adding a topic that has already been added', async()=> {
+  fit('Should notify when adding a topic that has already been added', async ()=> {
     // Arrange
     component.topics = ['test_topic'];
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css("#add-topic-button")).nativeElement;
-    const input: HTMLInputElement = fixture.debugElement.query(By.css('#topic-input')).nativeElement;
 
     // Act
-    input.value = 'test_topic';
-    input.dispatchEvent(new Event('input'));
-    await button.click();
-    const snackBar = await loader.getHarness(MatSnackBarHarness);
+    messagingPage.setTopicInput('test_topic');
+    messagingPage.AddTopicButton().click();
 
     // Assert
-    expect(await snackBar.getMessage()).toContain('"'+ component.newTopic +'"'+ ' is already added!');
+    expect(await messagingPage.getNotification()).toContain('"'+ component.newTopic +'"'+ ' is already added!');
   });
 
-  it ('Should add newTopic to topics when add-topic-button is clicked', ()=> {
+  fit('Should add newTopic to topics when add-topic-button is clicked', ()=> {
     // Arrange 
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
     component.newTopic = 'test-topic';
 
     // Act
-    button.click();
+    messagingPage.AddTopicButton().click();
     fixture.detectChanges();
 
     // Assert
     expect(component.topics).toContain('test-topic');
   });
 
-  it ('Should set newTopic to "" when add-topic-button is clicked', ()=> {
+  fit('Should set newTopic to "" when add-topic-button is clicked', ()=> {
     // Arrange
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css('button[id="add-topic-button"]')).nativeElement;
+    component.newTopic = 'test-topic';
 
     // Act
-    component.newTopic = 'test-topic';
-    button.click();
+    messagingPage.AddTopicButton().click();
     fixture.detectChanges();
 
     // Assert
     expect(component.newTopic).toBe("");
   });
 
-  it('Should dynamically display topics in the select element', ()=>{
+  fit('Should dynamically display topics in the select element', async ()=>{
     // Arrange
-    const trigger = fixture.debugElement.query(By.css('mat-select')).nativeElement;
     component.topics = ['test_channel_1','test_channel_2','test_channel_3']
     fixture.detectChanges();
 
     // Act
-    trigger.click();
-    fixture.detectChanges();
-    const options = fixture.debugElement.queryAll(By.css('mat-option'));
+    const options = await messagingPage.getTopicOptions();
 
     // Assert
-    expect(options[0].nativeElement.innerText).toEqual('test_channel_1');
-    expect(options[1].nativeElement.innerText).toEqual('test_channel_2');
-    expect(options[2].nativeElement.innerText).toEqual('test_channel_3');
+    expect(await options[0].getText()).toEqual('test_channel_1');
+    expect(await options[1].getText()).toEqual('test_channel_2');
+    expect(await options[2].getText()).toEqual('test_channel_3');
   });
 
-  it('Should notify when topic is not selected and subscribe button is clicked', async ()=>{
-    // Arrange
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-
+  fit('Should notify when topic is not selected and subscribe button is clicked', async ()=>{
     // Act 
-    await button.click()
-    let snackBar = await loader.getHarness(MatSnackBarHarness);
+    messagingPage.subscribeButton().click()
 
     // Assert
-    expect(await snackBar.getMessage()).toBe('Please select a topic!');
+    expect(await messagingPage.getNotification()).toBe('Please select a topic!');
   });
 
-  it('Should notify when topic is already subscribed to and subscribe button is clicked', async ()=>{
+  fit('Should notify when topic is already subscribed to and subscribe button is clicked', async ()=>{
     // Arrange
     component.topics = ['test_topic'];
     component.subscribedToTopics = ['test_topic'];
-    const button: HTMLButtonElement = fixture.debugElement.query(By.css('#subscribe-button')).nativeElement;
-    const select = await loader.getHarness(MatSelectHarness);
+    const options = await messagingPage.getTopicOptions();
 
     // Act 
-    await select.open();
-    const options = await select.getOptions();
     await options[0].click();
-    await button.click()
-    const snackBar = await loader.getHarness(MatSnackBarHarness);
+    messagingPage.subscribeButton().click()
 
     // Assert
-    expect(await snackBar.getMessage()).toBe('Already subscribed to "' + component.selectedTopic + '"');
+    expect(await messagingPage.getNotification()).toBe('Already subscribed to "' + component.selectedTopic + '"');
   });
 
   it('Should subscribe to non-empty topic when subscribe button is clicked', async ()=>{
